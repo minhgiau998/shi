@@ -2,6 +2,7 @@
   "expo": {
     "name": "SHI",
     "slug": "SHI",
+    "scheme": "shi-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,10 +22,27 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.anonymous.SHI"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "@react-native-community/datetimepicker",
+        {
+          "android": {
+            "accentColor": "#FF5733",
+            "textColor": "#000000"
+          }
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "e8881e2d-0f50-431e-854c-f356e164d675"
+      }
     }
   }
 }

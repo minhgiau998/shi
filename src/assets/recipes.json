@@ -1,0 +1,60 @@
+[
+    {
+        "id": "1",
+        "name": "Omelet",
+        "ingredients": [
+            "egg",
+            "cheese",
+            "milk",
+            "butter"
+        ],
+        "tag": "protein"
+    },
+    {
+        "id": "2",
+        "name": "Vegetable Stir Fry",
+        "ingredients": [
+            "broccoli",
+            "carrot",
+            "onion",
+            "tofu",
+            "soy sauce"
+        ],
+        "tag": "vegetable"
+    },
+    {
+        "id": "3",
+        "name": "Chicken Salad",
+        "ingredients": [
+            "chicken",
+            "lettuce",
+            "tomato",
+            "cucumber",
+            "dressing"
+        ],
+        "tag": "protein"
+    },
+    {
+        "id": "4",
+        "name": "Pasta Marinara",
+        "ingredients": [
+            "pasta",
+            "tomato",
+            "garlic",
+            "basil",
+            "olive oil"
+        ],
+        "tag": "carb"
+    },
+    {
+        "id": "5",
+        "name": "Fruit Bowl",
+        "ingredients": [
+            "apple",
+            "banana",
+            "berry",
+            "yogurt"
+        ],
+        "tag": "fruit"
+    }
+]
