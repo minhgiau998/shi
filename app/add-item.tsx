@@ -28,7 +28,8 @@ import {
     Image,
     ScrollView,
 } from '@gluestack-ui/themed';
-import { TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { TouchableOpacity, KeyboardAvoidingView, Platform, Alert, Modal, StyleSheet } from 'react-native';
+import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -57,7 +58,7 @@ export default function AddItemScreen() {
     const { profile } = useUserStore();
     const [imageUri, setImageUri] = useState<string | null>(null);
 
-    const { control, handleSubmit, formState: { errors } } = useForm<FormData>({
+    const { control, handleSubmit, setValue, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(schema),
         defaultValues: {
             name: '',
@@ -69,8 +70,29 @@ export default function AddItemScreen() {
 
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [date, setDate] = useState(new Date());
+    const [isScanning, setIsScanning] = useState(false);
+    const [permission, requestPermission] = useCameraPermissions();
+    const [scanned, setScanned] = useState(false);
 
-    const pickImage = async () => {
+    const takePhoto = async () => {
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        if (status !== 'granted') {
+            alert('Sorry, we need camera permissions to make this work!');
+            return;
+        }
+
+        let result = await ImagePicker.launchCameraAsync({
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            setImageUri(result.assets[0].uri);
+        }
+    };
+
+    const chooseFromLibrary = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
             alert('Sorry, we need camera roll permissions to make this work!');
@@ -87,6 +109,44 @@ export default function AddItemScreen() {
         if (!result.canceled) {
             setImageUri(result.assets[0].uri);
         }
+    };
+
+    const pickImage = () => {
+        Alert.alert(
+            "Add Photo",
+            "Choose a source",
+            [
+                {
+                    text: "Take Photo",
+                    onPress: takePhoto
+                },
+                {
+                    text: "Choose from Library",
+                    onPress: chooseFromLibrary
+                },
+                {
+                    text: "Cancel",
+                    style: "cancel"
+                }
+            ]
+        );
+    };
+
+
+
+    const startScan = async () => {
+        if (!permission) {
+            await requestPermission();
+        }
+        if (!permission?.granted) {
+            const result = await requestPermission();
+            if (!result.granted) {
+                Alert.alert("Permission", "Camera permission is required to scan barcodes.");
+                return;
+            }
+        }
+        setScanned(false);
+        setIsScanning(true);
     };
 
     const onSubmit = (data: FormData) => {
@@ -242,19 +302,13 @@ export default function AddItemScreen() {
                                                 value={date}
                                                 mode="date"
                                                 display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                                                // For iOS only
                                                 accentColor="#6B9080"
                                                 textColor="#6B9080"
-                                                // -------------------------
                                                 onChange={(event, selectedDate) => {
-                                                    // On Android, the picker closes automatically (event type 'set' or 'dismissed')
-                                                    // On iOS, we usually keep it open to let the user scroll
                                                     const shouldClose = Platform.OS !== 'ios';
-
                                                     if (shouldClose) {
                                                         setShowDatePicker(false);
                                                     }
-
                                                     if (selectedDate) {
                                                         setDate(selectedDate);
                                                         onChange(format(selectedDate, 'yyyy-MM-dd'));
@@ -280,7 +334,7 @@ export default function AddItemScreen() {
                                         <Input variant="outline" flex={1}>
                                             <InputField placeholder="Barcode number" value={value} onChangeText={onChange} />
                                         </Input>
-                                        <Button variant="outline" action="primary" onPress={() => {/* Scan logic */ }}>
+                                        <Button variant="outline" action="primary" onPress={startScan}>
                                             <Icon as={Scan} color="#6B9080" />
                                         </Button>
                                     </HStack>
@@ -299,6 +353,27 @@ export default function AddItemScreen() {
                         </Button>
                     </VStack>
                 </ScrollView>
+
+                {/* Barcode Scanner Modal */}
+                <Modal visible={isScanning} animationType="slide">
+                    <Box flex={1} bg="black">
+                        <CameraView
+                            style={StyleSheet.absoluteFill}
+                            facing="back"
+                            onBarcodeScanned={scanned ? undefined : ({ type, data }) => {
+                                setScanned(true);
+                                setIsScanning(false);
+                                setValue('barcode', data);
+                                Alert.alert("Scanned", `Barcode: ${data}`);
+                            }}
+                        />
+                        <Box position="absolute" bottom={50} w="$full" alignItems="center">
+                            <Button onPress={() => setIsScanning(false)} bg="$red500" size="lg">
+                                <ButtonText>Close Scanner</ButtonText>
+                            </Button>
+                        </Box>
+                    </Box>
+                </Modal>
             </Box>
         </KeyboardAvoidingView>
     );

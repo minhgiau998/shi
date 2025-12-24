@@ -28,7 +28,7 @@ import {
     Image,
     ScrollView,
 } from '@gluestack-ui/themed';
-import { TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { TouchableOpacity, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -112,7 +112,25 @@ export default function EditItemScreen() {
         );
     }
 
-    const pickImage = async () => {
+    const takePhoto = async () => {
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        if (status !== 'granted') {
+            alert('Sorry, we need camera permissions to make this work!');
+            return;
+        }
+
+        let result = await ImagePicker.launchCameraAsync({
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            setImageUri(result.assets[0].uri);
+        }
+    };
+
+    const chooseFromLibrary = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
             alert('Sorry, we need camera roll permissions to make this work!');
@@ -129,6 +147,27 @@ export default function EditItemScreen() {
         if (!result.canceled) {
             setImageUri(result.assets[0].uri);
         }
+    };
+
+    const pickImage = () => {
+        Alert.alert(
+            "Change Photo",
+            "Choose a source",
+            [
+                {
+                    text: "Take Photo",
+                    onPress: takePhoto
+                },
+                {
+                    text: "Choose from Library",
+                    onPress: chooseFromLibrary
+                },
+                {
+                    text: "Cancel",
+                    style: "cancel"
+                }
+            ]
+        );
     };
 
     const onSubmit = async (data: FormData) => {

@@ -45,7 +45,7 @@ export default function OnboardingScreen() {
         },
     });
 
-    const onSubmit = (data: OnboardingFormData) => {
+    const onSubmit = async (data: OnboardingFormData) => {
         // Generate UUID or similar
         const newProfile = {
             id: Math.random().toString(36).substring(7),
@@ -60,7 +60,7 @@ export default function OnboardingScreen() {
             createdAt: new Date().toISOString(),
         };
 
-        setProfile(newProfile);
+        await setProfile(newProfile);
         // In real app, save to DB here
         router.replace('/');
     };

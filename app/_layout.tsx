@@ -3,18 +3,29 @@ import { config } from '@gluestack-ui/config';
 import { Stack, useRouter, useRootNavigationState, useSegments } from 'expo-router';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useUserStore } from '@store/userStore';
+import { useInventoryStore } from '@store/inventoryStore';
 import { useEffect } from 'react';
 import { notificationService } from '@utils/notificationService';
 import * as Notifications from 'expo-notifications';
+import { verifyTables } from '@db/client';
 
 export default function RootLayout() {
     const rootNavigationState = useRootNavigationState();
-    const { profile } = useUserStore();
     const router = useRouter();
     const segments = useSegments();
 
-    // Request permissions and setup listeners
+    const { loadItems } = useInventoryStore();
+    const { profile, loadUser, isLoading } = useUserStore();
+
+    // Request permissions, setup listeners, and initialize DB
     useEffect(() => {
+        // Initialize DB tables
+        verifyTables();
+
+        // Load data
+        loadItems();
+        loadUser();
+
         notificationService.requestPermissions();
 
         // Listen for notification interactions (user taps on notification)
@@ -30,7 +41,7 @@ export default function RootLayout() {
 
     // Ensure the navigation state is ready before rendering the Stack
     // This prevents "Attempted to navigate before mounting the Root Layout component"
-    if (!rootNavigationState?.key) {
+    if (!rootNavigationState?.key || isLoading) {
         return null; // Or a splash screen
     }
 
@@ -43,7 +54,7 @@ export default function RootLayout() {
                         animation: 'slide_from_right',
                     }}
                 >
-                    <Stack.Screen name="index" />
+                    <Stack.Screen name="index" redirect={!profile?.isOnboarded} />
                     <Stack.Screen name="onboarding" options={{ gestureEnabled: false }} />
                     <Stack.Screen name="add-item" options={{ presentation: 'modal' }} />
                     <Stack.Screen name="settings" options={{ presentation: 'modal' }} />

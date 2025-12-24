@@ -1,4 +1,5 @@
 import React from 'react';
+import { Alert } from 'react-native';
 import {
     Box,
     VStack,
@@ -11,16 +12,15 @@ import {
     ButtonText,
     Divider,
     ScrollView,
-    Avatar,
-    AvatarImage,
-    Switch
+    Avatar
 } from '@gluestack-ui/themed';
 import { useUserStore } from '@store/userStore';
+import { Share2 } from 'lucide-react-native';
+import { shareInventoryList } from '@utils/shareList';
 import { useInventoryStore } from '@store/inventoryStore';
 import { useRouter } from 'expo-router';
 import { ChevronLeft, LogOut, Download, Bell } from 'lucide-react-native';
 import { getAvatarIcon } from '@features/user/components/AvatarGrid';
-import { exportAsCSV, exportAsJSON } from '@utils/exportData';
 import { computeAllItemStatuses } from '@utils/expirationStatus';
 
 export default function SettingsScreen() {
@@ -32,14 +32,6 @@ export default function SettingsScreen() {
 
     // Compute current status for all items before export
     const itemsWithStatus = computeAllItemStatuses(items, profile.notificationSettings);
-
-    const handleExportCSV = async () => {
-        await exportAsCSV(itemsWithStatus);
-    };
-
-    const handleExportJSON = async () => {
-        await exportAsJSON(itemsWithStatus);
-    };
 
     return (
         <Box flex={1} bg="$white">
@@ -88,18 +80,25 @@ export default function SettingsScreen() {
                     </HStack>
                 </VStack>
 
-                {/* Data Management */}
+                {/* Share Section */}
                 <VStack space="md" mb="$10">
                     <HStack alignItems="center" space="sm">
-                        <Icon as={Download} size="sm" color="$coolGray600" />
-                        <Heading size="md">Data Management</Heading>
+                        <Icon as={Share2} size="sm" color="$coolGray600" />
+                        <Heading size="md">Share Data</Heading>
                     </HStack>
                     <Divider />
-                    <Button variant="outline" action="primary" onPress={handleExportCSV} borderColor="#6B9080">
-                        <ButtonText color="#6B9080">Export as CSV</ButtonText>
-                    </Button>
-                    <Button variant="outline" action="primary" onPress={handleExportJSON} borderColor="#6B9080">
-                        <ButtonText color="#6B9080">Export as JSON</ButtonText>
+
+                    <Text size="sm" color="$coolGray500">
+                        Send your current inventory list via message or save to notes.
+                    </Text>
+
+                    <Button
+                        variant="outline"
+                        action="primary"
+                        borderColor="#6B9080"
+                        onPress={() => shareInventoryList(items)}
+                    >
+                        <ButtonText color="#6B9080">Share Inventory List</ButtonText>
                     </Button>
                 </VStack>
 
@@ -108,8 +107,25 @@ export default function SettingsScreen() {
                     variant="outline"
                     action="negative"
                     onPress={() => {
-                        clearProfile();
-                        router.replace('/onboarding');
+                        Alert.alert(
+                            "Reset App Data",
+                            "Are you sure you want to delete all your data? This action cannot be undone.",
+                            [
+                                {
+                                    text: "Cancel",
+                                    style: "cancel"
+                                },
+                                {
+                                    text: "Delete",
+                                    style: "destructive",
+                                    onPress: async () => {
+                                        await useInventoryStore.getState().resetStore();
+                                        await clearProfile();
+                                        router.replace('/onboarding');
+                                    }
+                                }
+                            ]
+                        );
                     }}
                     mt="$10"
                 >
