@@ -40,24 +40,26 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { format, parseISO } from 'date-fns';
 import { useUserStore } from '@store/userStore';
 import { notificationService } from '@utils/notificationService';
+import { useTranslation } from 'react-i18next';
 import { CATEGORIES, CATEGORY_VALUES } from '../../src/constants/categories';
 
-const schema = z.object({
-    name: z.string().min(1, 'Name is required'),
-    type: z.enum(CATEGORY_VALUES),
-    expirationDate: z.string().min(1, 'Date is required'),
-    barcode: z.string().optional(),
-});
-
-type FormData = z.infer<typeof schema>;
-
 export default function EditItemScreen() {
+    const { t } = useTranslation();
     const router = useRouter();
     const { id } = useLocalSearchParams();
     const { items, updateItem } = useInventoryStore();
     const { profile } = useUserStore();
 
     const item = items.find((i) => i.id === id);
+
+    const schema = z.object({
+        name: z.string().min(1, t('add_item.errors.name_required')),
+        type: z.enum(CATEGORY_VALUES),
+        expirationDate: z.string().min(1, t('add_item.errors.date_required')),
+        barcode: z.string().optional(),
+    });
+
+    type FormData = z.infer<typeof schema>;
 
     const [imageUri, setImageUri] = useState<string | null>(item?.imageUri || null);
     const [showDatePicker, setShowDatePicker] = useState(false);
@@ -105,9 +107,9 @@ export default function EditItemScreen() {
     if (!item) {
         return (
             <Box flex={1} justifyContent="center" alignItems="center" bg="$white">
-                <Text>Item not found</Text>
+                <Text>{t('item.not_found')}</Text>
                 <Button onPress={() => router.back()} mt="$4">
-                    <ButtonText>Go Back</ButtonText>
+                    <ButtonText>{t('item.go_back')}</ButtonText>
                 </Button>
             </Box>
         );
@@ -116,7 +118,7 @@ export default function EditItemScreen() {
     const takePhoto = async () => {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
         if (status !== 'granted') {
-            alert('Sorry, we need camera permissions to make this work!');
+            alert(t('add_item.camera_permission_err'));
             return;
         }
 
@@ -134,7 +136,7 @@ export default function EditItemScreen() {
     const chooseFromLibrary = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
-            alert('Sorry, we need camera roll permissions to make this work!');
+            alert(t('add_item.library_permission_err'));
             return;
         }
 
@@ -152,19 +154,19 @@ export default function EditItemScreen() {
 
     const pickImage = () => {
         Alert.alert(
-            "Change Photo",
-            "Choose a source",
+            t('edit_item.change_photo'),
+            t('add_item.choose_source'),
             [
                 {
-                    text: "Take Photo",
+                    text: t('add_item.take_photo'),
                     onPress: takePhoto
                 },
                 {
-                    text: "Choose from Library",
+                    text: t('add_item.choose_library'),
                     onPress: chooseFromLibrary
                 },
                 {
-                    text: "Cancel",
+                    text: t('common.cancel'),
                     style: "cancel"
                 }
             ]
@@ -216,9 +218,9 @@ export default function EditItemScreen() {
                 <ScrollView p="$6" keyboardShouldPersistTaps="handled">
                     <VStack space="xl" mt="$10" pb="$10">
                         <HStack justifyContent="space-between" alignItems="center">
-                            <Heading size="xl" color="$textLight900" $dark-color="$textDark50">Edit Item</Heading>
+                            <Heading size="xl" color="$textLight900" $dark-color="$textDark50">{t('edit_item.title')}</Heading>
                             <Pressable onPress={() => router.back()}>
-                                <Text color="#6B9080">Cancel</Text>
+                                <Text color="#6B9080">{t('common.cancel')}</Text>
                             </Pressable>
                         </HStack>
 
@@ -260,7 +262,7 @@ export default function EditItemScreen() {
                                     ) : (
                                         <VStack alignItems="center" space="sm">
                                             <Icon as={CameraIcon} size="xl" color="$coolGray400" />
-                                            <Text color="$coolGray400">Change Photo</Text>
+                                            <Text color="$coolGray400">{t('edit_item.change_photo')}</Text>
                                         </VStack>
                                     )}
                                 </Box>
@@ -269,14 +271,14 @@ export default function EditItemScreen() {
 
                         <FormControl isInvalid={!!errors.name}>
                             <FormControlLabel>
-                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Item Name</FormControlLabelText>
+                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">{t('add_item.item_name')}</FormControlLabelText>
                             </FormControlLabel>
                             <Controller
                                 control={control}
                                 name="name"
                                 render={({ field: { onChange, value } }) => (
                                     <Input variant="outline">
-                                        <InputField placeholder="e.g. Greek Yogurt" value={value} onChangeText={onChange} color="$textLight900" $dark-color="$textDark50" />
+                                        <InputField placeholder={t('add_item.item_name_placeholder')} value={value} onChangeText={onChange} color="$textLight900" $dark-color="$textDark50" />
                                     </Input>
                                 )}
                             />
@@ -284,7 +286,7 @@ export default function EditItemScreen() {
 
                         <FormControl isInvalid={!!errors.type}>
                             <FormControlLabel>
-                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Category</FormControlLabelText>
+                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">{t('add_item.category')}</FormControlLabelText>
                             </FormControlLabel>
                             <Controller
                                 control={control}
@@ -292,7 +294,7 @@ export default function EditItemScreen() {
                                 render={({ field: { onChange, value } }) => (
                                     <Select onValueChange={onChange} selectedValue={value}>
                                         <SelectTrigger variant="outline" size="md">
-                                            <SelectInput placeholder="Select category" color="$textLight900" $dark-color="$textDark50" />
+                                            <SelectInput placeholder={t('add_item.select_category')} color="$textLight900" $dark-color="$textDark50" />
                                             <SelectIcon as={ChevronDownIcon} mr="$3" />
                                         </SelectTrigger>
                                         <SelectPortal>
@@ -304,7 +306,7 @@ export default function EditItemScreen() {
                                                 {CATEGORIES.map((cat) => (
                                                     <SelectItem
                                                         key={cat.value}
-                                                        label={cat.label}
+                                                        label={t(`categories.${cat.value.toLowerCase()}`)}
                                                         value={cat.value}
                                                         sx={{
                                                             _light: {
@@ -337,7 +339,7 @@ export default function EditItemScreen() {
 
                         <FormControl isInvalid={!!errors.expirationDate}>
                             <FormControlLabel>
-                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Expiration Date</FormControlLabelText>
+                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">{t('add_item.expiration_date')}</FormControlLabelText>
                             </FormControlLabel>
                             <Controller
                                 control={control}
@@ -347,7 +349,7 @@ export default function EditItemScreen() {
                                         <Pressable onPress={() => setShowDatePicker(true)}>
                                             <Input variant="outline" isReadOnly>
                                                 <InputField
-                                                    placeholder="Select Date"
+                                                    placeholder={t('add_item.select_date')}
                                                     value={value}
                                                     editable={false}
                                                     color="$textLight900"
@@ -388,7 +390,7 @@ export default function EditItemScreen() {
 
                         <FormControl>
                             <FormControlLabel>
-                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Barcode (Optional)</FormControlLabelText>
+                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">{t('add_item.barcode_optional')}</FormControlLabelText>
                             </FormControlLabel>
                             <Controller
                                 control={control}
@@ -396,7 +398,7 @@ export default function EditItemScreen() {
                                 render={({ field: { onChange, value } }) => (
                                     <HStack space="md">
                                         <Input variant="outline" flex={1}>
-                                            <InputField placeholder="Barcode number" value={value} onChangeText={onChange} color="$textLight900" $dark-color="$textDark50" />
+                                            <InputField placeholder={t('add_item.barcode_placeholder')} value={value} onChangeText={onChange} color="$textLight900" $dark-color="$textDark50" />
                                         </Input>
                                         <Button variant="outline" action="primary" onPress={() => {/* Scan logic */ }}>
                                             <Icon as={Scan} color="#6B9080" />
@@ -413,7 +415,7 @@ export default function EditItemScreen() {
                             mt="$2"
                             borderRadius="$xl"
                         >
-                            <ButtonText>Save Changes</ButtonText>
+                            <ButtonText>{t('edit_item.save_changes')}</ButtonText>
                         </Button>
                     </VStack>
                 </ScrollView>

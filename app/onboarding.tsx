@@ -25,17 +25,19 @@ import { AvatarGrid } from '@features/user/components/AvatarGrid';
 import { useUserStore } from '@store/userStore';
 import { useRouter } from 'expo-router';
 import { KeyboardAvoidingView, Platform } from 'react-native';
-
-const schema = z.object({
-    name: z.string().min(2, 'Name must be at least 2 characters'),
-    avatarId: z.string({ message: 'Please select an avatar' }),
-});
-
-type OnboardingFormData = z.infer<typeof schema>;
+import { useTranslation } from 'react-i18next';
 
 export default function OnboardingScreen() {
+    const { t } = useTranslation();
     const router = useRouter();
     const setProfile = useUserStore((state) => state.setProfile);
+
+    const schema = z.object({
+        name: z.string().min(2, t('onboarding.errors.name_min')),
+        avatarId: z.string({ message: t('onboarding.errors.avatar_required') }),
+    });
+
+    type OnboardingFormData = z.infer<typeof schema>;
 
     const { control, handleSubmit, formState: { errors } } = useForm<OnboardingFormData>({
         resolver: zodResolver(schema),
@@ -59,6 +61,7 @@ export default function OnboardingScreen() {
             },
             createdAt: new Date().toISOString(),
             theme: 'system' as 'system' | 'light' | 'dark',
+            language: 'system',
         };
 
         await setProfile(newProfile);
@@ -75,15 +78,15 @@ export default function OnboardingScreen() {
                 <ScrollView p="$6" keyboardShouldPersistTaps="handled">
                     <VStack space="xl" mt="$16">
                         <Center>
-                            <Heading size="2xl" textAlign="center" color="$textLight900" $dark-color="$textDark50">Welcome to SHI!</Heading>
+                            <Heading size="2xl" textAlign="center" color="$textLight900" $dark-color="$textDark50">{t('onboarding.welcome')}</Heading>
                             <Text size="md" color="$coolGray500" textAlign="center" mt="$2">
-                                Let's get to know you.
+                                {t('onboarding.subtitle')}
                             </Text>
                         </Center>
 
                         <FormControl isInvalid={!!errors.name}>
                             <FormControlLabel>
-                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">What should we call you?</FormControlLabelText>
+                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">{t('onboarding.name_label')}</FormControlLabelText>
                             </FormControlLabel>
                             <Controller
                                 control={control}
@@ -91,7 +94,7 @@ export default function OnboardingScreen() {
                                 render={({ field: { onChange, onBlur, value } }) => (
                                     <Input variant="underlined">
                                         <InputField
-                                            placeholder="Your Name"
+                                            placeholder={t('onboarding.name_placeholder')}
                                             onBlur={onBlur}
                                             onChangeText={onChange}
                                             value={value}
@@ -109,7 +112,7 @@ export default function OnboardingScreen() {
 
                         <FormControl isInvalid={!!errors.avatarId}>
                             <FormControlLabel>
-                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Choose your avatar</FormControlLabelText>
+                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">{t('onboarding.avatar_label')}</FormControlLabelText>
                             </FormControlLabel>
                             <Controller
                                 control={control}
@@ -131,7 +134,7 @@ export default function OnboardingScreen() {
                             mt="$10"
                             borderRadius="$xl"
                         >
-                            <ButtonText>Start Organizing</ButtonText>
+                            <ButtonText>{t('onboarding.start_button')}</ButtonText>
                         </Button>
                     </VStack>
                 </ScrollView>

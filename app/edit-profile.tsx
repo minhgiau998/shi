@@ -31,21 +31,23 @@ import { useRouter } from 'expo-router';
 import { ChevronLeft } from 'lucide-react-native';
 import { notificationService } from '@utils/notificationService';
 import { KeyboardAvoidingView, Platform } from 'react-native';
-
-const schema = z.object({
-    userName: z.string().min(2, 'Name must be at least 2 characters'),
-    avatarId: z.string({ message: 'Please select an avatar' }),
-    foodLeadTime: z.number().min(1).max(30),
-    medicineLeadTime: z.number().min(1).max(30),
-    cosmeticsLeadTime: z.number().min(1).max(30),
-});
-
-type EditProfileFormData = z.infer<typeof schema>;
+import { useTranslation } from 'react-i18next';
 
 export default function EditProfileScreen() {
+    const { t } = useTranslation();
     const router = useRouter();
     const { profile, updateProfile } = useUserStore();
     const { items, updateItem } = useInventoryStore();
+
+    const schema = z.object({
+        userName: z.string().min(2, t('onboarding.errors.name_min')),
+        avatarId: z.string({ message: t('onboarding.errors.avatar_required') }),
+        foodLeadTime: z.number().min(1).max(30),
+        medicineLeadTime: z.number().min(1).max(30),
+        cosmeticsLeadTime: z.number().min(1).max(30),
+    });
+
+    type EditProfileFormData = z.infer<typeof schema>;
 
     const { control, handleSubmit, formState: { errors }, reset } = useForm<EditProfileFormData>({
         resolver: zodResolver(schema),
@@ -115,13 +117,13 @@ export default function EditProfileScreen() {
                         <Pressable onPress={() => router.back()}>
                             <Icon as={ChevronLeft} size="xl" color="$textLight900" $dark-color="$textDark50" />
                         </Pressable>
-                        <Heading size="xl" color="$textLight900" $dark-color="$textDark50">Edit Profile</Heading>
+                        <Heading size="xl" color="$textLight900" $dark-color="$textDark50">{t('edit_profile.title')}</Heading>
                     </HStack>
 
                     <VStack space="xl">
                         <FormControl isInvalid={!!errors.userName}>
                             <FormControlLabel>
-                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Display Name</FormControlLabelText>
+                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">{t('edit_profile.display_name')}</FormControlLabelText>
                             </FormControlLabel>
                             <Controller
                                 control={control}
@@ -129,7 +131,7 @@ export default function EditProfileScreen() {
                                 render={({ field: { onChange, onBlur, value } }) => (
                                     <Input variant="outline">
                                         <InputField
-                                            placeholder="Your Name"
+                                            placeholder={t('onboarding.name_placeholder')}
                                             onBlur={onBlur}
                                             onChangeText={onChange}
                                             value={value}
@@ -147,7 +149,7 @@ export default function EditProfileScreen() {
 
                         <FormControl isInvalid={!!errors.avatarId}>
                             <FormControlLabel>
-                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Change Avatar</FormControlLabelText>
+                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">{t('edit_profile.change_avatar')}</FormControlLabelText>
                             </FormControlLabel>
                             <Controller
                                 control={control}
@@ -163,15 +165,15 @@ export default function EditProfileScreen() {
                         </FormControl>
 
                         <Divider my="$4" />
-                        <Heading size="md" mb="$2" color="$textLight900" $dark-color="$textDark50">Notification Lead Times (Days)</Heading>
+                        <Heading size="md" mb="$2" color="$textLight900" $dark-color="$textDark50">{t('edit_profile.lead_times_title')}</Heading>
                         <Text size="xs" color="$coolGray500" mb="$4">
-                            How many days before expiration should we notify you?
+                            {t('edit_profile.lead_times_description')}
                         </Text>
 
                         <HStack space="md" justifyContent="space-between">
                             <FormControl flex={1} isInvalid={!!errors.foodLeadTime}>
                                 <FormControlLabel>
-                                    <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Food</FormControlLabelText>
+                                    <FormControlLabelText color="$textLight900" $dark-color="$textDark50">{t('categories.food')}</FormControlLabelText>
                                 </FormControlLabel>
                                 <Controller
                                     control={control}
@@ -192,7 +194,7 @@ export default function EditProfileScreen() {
 
                             <FormControl flex={1} isInvalid={!!errors.medicineLeadTime}>
                                 <FormControlLabel>
-                                    <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Medicine</FormControlLabelText>
+                                    <FormControlLabelText color="$textLight900" $dark-color="$textDark50">{t('categories.medicine')}</FormControlLabelText>
                                 </FormControlLabel>
                                 <Controller
                                     control={control}
@@ -213,7 +215,7 @@ export default function EditProfileScreen() {
 
                             <FormControl flex={1} isInvalid={!!errors.cosmeticsLeadTime}>
                                 <FormControlLabel>
-                                    <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Cosmetics</FormControlLabelText>
+                                    <FormControlLabelText color="$textLight900" $dark-color="$textDark50">{t('categories.cosmetics')}</FormControlLabelText>
                                 </FormControlLabel>
                                 <Controller
                                     control={control}
@@ -240,7 +242,7 @@ export default function EditProfileScreen() {
                             mt="$10"
                             borderRadius="$xl"
                         >
-                            <ButtonText>Save Changes</ButtonText>
+                            <ButtonText>{t('edit_profile.save_changes')}</ButtonText>
                         </Button>
                     </VStack>
                 </ScrollView>

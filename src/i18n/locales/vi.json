@@ -1,0 +1,165 @@
+{
+    "common": {
+        "settings": "Cài đặt",
+        "edit": "Sửa",
+        "save": "Lưu",
+        "cancel": "Hủy",
+        "delete": "Xóa",
+        "reset": "Đặt lại",
+        "all": "Tất cả"
+    },
+    "settings": {
+        "title": "Cài đặt",
+        "appearance": "Giao diện",
+        "language": "Ngôn ngữ",
+        "notifications": "Thông báo",
+        "share_data": "Chia sẻ dữ liệu",
+        "reset_data": "Đặt lại ứng dụng",
+        "reset_description": "Thao tác này sẽ xóa toàn bộ dữ liệu trong ứng dụng và đặt lại mọi thứ về ban đầu.",
+        "share_description": "Gửi danh sách hàng tồn kho hiện tại của bạn qua tin nhắn hoặc lưu vào ghi chú.",
+        "share_button": "Chia sẻ danh sách",
+        "lead_time": "Thời gian báo trước {{category}} (Ngày)",
+        "created_at": "Đã tạo vào {{date}}",
+        "themes": {
+            "system": "Hệ thống",
+            "light": "Sáng",
+            "dark": "Tối"
+        },
+        "languages": {
+            "system": "Hệ thống",
+            "en": "English",
+            "vi": "Tiếng Việt"
+        }
+    },
+    "dashboard": {
+        "hello": "Xin chào, {{name}}!",
+        "expired_msg": "⚠️ Bạn có {{count}} vật phẩm đã hết hạn!",
+        "expired_msg_plural": "⚠️ Bạn có {{count}} vật phẩm đã hết hạn!",
+        "expiring_soon_msg": "Bạn có {{count}} vật phẩm sắp hết hạn.",
+        "expiring_soon_msg_plural": "Bạn có {{count}} vật phẩm sắp hết hạn.",
+        "all_fresh": "Mọi thứ đều tươi mới!",
+        "recipe_tip": "Gợi ý công thức",
+        "no_items": "Không tìm thấy vật phẩm nào. Hãy thêm mới!",
+        "expires": "Hết hạn: {{date}}"
+    },
+    "categories": {
+        "food": "Thực phẩm",
+        "medicine": "Thuốc",
+        "cosmetics": "Mỹ phẩm"
+    },
+    "onboarding": {
+        "welcome": "Chào mừng đến với SHI!",
+        "subtitle": "Hãy để chúng tôi làm quen với bạn.",
+        "name_label": "Chúng tôi nên gọi bạn là gì?",
+        "name_placeholder": "Tên của bạn",
+        "avatar_label": "Chọn hình đại diện",
+        "start_button": "Bắt đầu sắp xếp",
+        "errors": {
+            "name_min": "Tên phải có ít nhất 2 ký tự",
+            "avatar_required": "Vui lòng chọn một hình đại diện"
+        }
+    },
+    "item": {
+        "not_found": "Không tìm thấy vật phẩm",
+        "go_back": "Quay lại",
+        "expiration_date": "Ngày hết hạn",
+        "barcode": "Mã vạch",
+        "edit_item": "Sửa vật phẩm",
+        "remove": "Xóa",
+        "expires_today": "Hết hạn hôm nay!",
+        "expires_in": "Còn {{count}} ngày",
+        "expires_in_plural": "Còn {{count}} ngày",
+        "expired_ago": "Đã hết hạn {{count}} ngày trước",
+        "expired_ago_plural": "Đã hết hạn {{count}} ngày trước",
+        "status": {
+            "fresh": "Còn tươi",
+            "expiring_soon": "Sắp hết hạn",
+            "expired": "Đã hết hạn"
+        }
+    },
+    "add_item": {
+        "title": "Thêm vật phẩm",
+        "item_name": "Tên vật phẩm",
+        "item_name_placeholder": "Ví dụ: Sữa chua",
+        "category": "Danh mục",
+        "select_category": "Chọn danh mục",
+        "expiration_date": "Ngày hết hạn",
+        "select_date": "Chọn ngày",
+        "barcode_optional": "Mã vạch (Không bắt buộc)",
+        "barcode_placeholder": "Nhập mã vạch",
+        "save_item": "Lưu vật phẩm",
+        "add_photo": "Thêm ảnh",
+        "take_photo": "Chụp ảnh mới",
+        "choose_library": "Chọn từ thư viện",
+        "choose_source": "Chọn nguồn ảnh",
+        "camera_permission_err": "Xin lỗi, chúng tôi cần quyền truy cập camera để thực hiện việc này!",
+        "library_permission_err": "Xin lỗi, chúng tôi cần quyền truy cập thư viện ảnh để thực hiện việc này!",
+        "camera_permission_required": "Cần quyền camera để quét mã vạch.",
+        "permission": "Quyền truy cập",
+        "scanned": "Đã quét",
+        "barcode_msg": "Mã vạch: {{data}}",
+        "close_scanner": "Đóng trình quét",
+        "errors": {
+            "name_required": "Vui lòng nhập tên",
+            "date_required": "Vui lòng chọn ngày"
+        }
+    },
+    "edit_item": {
+        "title": "Sửa vật phẩm",
+        "save_changes": "Lưu thay đổi",
+        "change_photo": "Thay đổi ảnh"
+    },
+    "edit_profile": {
+        "title": "Sửa hồ sơ",
+        "display_name": "Tên hiển thị",
+        "change_avatar": "Thay đổi hình đại diện",
+        "lead_times_title": "Thời gian báo trước thông báo (Ngày)",
+        "lead_times_description": "Bạn muốn chúng tôi thông báo trước bao nhiêu ngày khi vật phẩm sắp hết hạn?",
+        "save_changes": "Lưu thay đổi"
+    },
+    "recipes": {
+        "title": "Công thức nấu ăn",
+        "suggestion": "Hãy thử làm món {{recipe}} với {{item}} của bạn nhé!",
+        "fallback": "Hay là một bữa ăn lành mạnh nhanh gọn với các vật phẩm này?",
+        "names": {
+            "Omelet": "Trứng cuộn",
+            "Vegetable Stir Fry": "Rau củ xào",
+            "Chicken Salad": "Salad gà",
+            "Pasta Marinara": "Mì Ý sốt cà chua",
+            "Fruit Bowl": "Trái cây trộn"
+        },
+        "ingredients": "Nguyên liệu",
+        "instructions": "Cách làm",
+        "coming_soon": "Hướng dẫn thực hiện món ăn này sẽ sớm được cập nhật!",
+        "ingredient_names": {
+            "egg": "Trứng",
+            "cheese": "Phô mai",
+            "milk": "Sữa",
+            "butter": "Bơ",
+            "broccoli": "Súp lơ xanh",
+            "carrot": "Cà rốt",
+            "onion": "Hành tây",
+            "tofu": "Đậu phụ",
+            "soy sauce": "Nước tương",
+            "chicken": "Thịt gà",
+            "lettuce": "Xà lách",
+            "tomato": "Cà chua",
+            "cucumber": "Dưa chuột",
+            "dressing": "Nước sốt",
+            "pasta": "Mì Ý",
+            "garlic": "Tỏi",
+            "basil": "Húng quế",
+            "olive oil": "Dầu ô liu",
+            "apple": "Táo",
+            "banana": "Chuối",
+            "berry": "Quả mọng",
+            "yogurt": "Sữa chua"
+        },
+        "tags": {
+            "protein": "Đạm",
+            "vegetable": "Rau củ",
+            "carb": "Tinh bột",
+            "fruit": "Trái cây"
+        }
+    }
+}

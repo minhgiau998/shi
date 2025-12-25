@@ -1,0 +1,165 @@
+{
+    "common": {
+        "settings": "Settings",
+        "edit": "Edit",
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "reset": "Reset",
+        "all": "All"
+    },
+    "settings": {
+        "title": "Settings",
+        "appearance": "App Appearance",
+        "language": "Language",
+        "notifications": "Notifications",
+        "share_data": "Share Data",
+        "reset_data": "Reset App Data",
+        "reset_description": "This will clear all data stored in the app and reset everything to the beginning.",
+        "share_description": "Send your current inventory list via message or save to notes.",
+        "share_button": "Share Inventory List",
+        "lead_time": "{{category}} Lead Time (Days)",
+        "created_at": "Created at {{date}}",
+        "themes": {
+            "system": "System",
+            "light": "Light",
+            "dark": "Dark"
+        },
+        "languages": {
+            "system": "System",
+            "en": "English",
+            "vi": "Tiếng Việt"
+        }
+    },
+    "dashboard": {
+        "hello": "Hello, {{name}}!",
+        "expired_msg": "⚠️ You have {{count}} expired item!",
+        "expired_msg_plural": "⚠️ You have {{count}} expired items!",
+        "expiring_soon_msg": "You have {{count}} item expiring soon.",
+        "expiring_soon_msg_plural": "You have {{count}} items expiring soon.",
+        "all_fresh": "Everything is fresh!",
+        "recipe_tip": "Recipe Tip",
+        "no_items": "No items found. Add some!",
+        "expires": "Expires: {{date}}"
+    },
+    "categories": {
+        "food": "Food",
+        "medicine": "Medicine",
+        "cosmetics": "Cosmetics"
+    },
+    "onboarding": {
+        "welcome": "Welcome to SHI!",
+        "subtitle": "Let's get to know you.",
+        "name_label": "What should we call you?",
+        "name_placeholder": "Your Name",
+        "avatar_label": "Choose your avatar",
+        "start_button": "Start Organizing",
+        "errors": {
+            "name_min": "Name must be at least 2 characters",
+            "avatar_required": "Please select an avatar"
+        }
+    },
+    "item": {
+        "not_found": "Item not found",
+        "go_back": "Go Back",
+        "expiration_date": "Expiration Date",
+        "barcode": "Barcode",
+        "edit_item": "Edit Item",
+        "remove": "Remove",
+        "expires_today": "Expires today!",
+        "expires_in": "Expires in {{count}} day",
+        "expires_in_plural": "Expires in {{count}} days",
+        "expired_ago": "Expired {{count}} day ago",
+        "expired_ago_plural": "Expired {{count}} days ago",
+        "status": {
+            "fresh": "Fresh",
+            "expiring_soon": "Expiring Soon",
+            "expired": "Expired"
+        }
+    },
+    "add_item": {
+        "title": "Add Item",
+        "item_name": "Item Name",
+        "item_name_placeholder": "e.g. Greek Yogurt",
+        "category": "Category",
+        "select_category": "Select category",
+        "expiration_date": "Expiration Date",
+        "select_date": "Select Date",
+        "barcode_optional": "Barcode (Optional)",
+        "barcode_placeholder": "Barcode number",
+        "save_item": "Save Item",
+        "add_photo": "Add Photo",
+        "take_photo": "Take Photo",
+        "choose_library": "Choose from Library",
+        "choose_source": "Choose a source",
+        "camera_permission_err": "Sorry, we need camera permissions to make this work!",
+        "library_permission_err": "Sorry, we need camera roll permissions to make this work!",
+        "camera_permission_required": "Camera permission is required to scan barcodes.",
+        "permission": "Permission",
+        "scanned": "Scanned",
+        "barcode_msg": "Barcode: {{data}}",
+        "close_scanner": "Close Scanner",
+        "errors": {
+            "name_required": "Name is required",
+            "date_required": "Date is required"
+        }
+    },
+    "edit_item": {
+        "title": "Edit Item",
+        "save_changes": "Save Changes",
+        "change_photo": "Change Photo"
+    },
+    "edit_profile": {
+        "title": "Edit Profile",
+        "display_name": "Display Name",
+        "change_avatar": "Change Avatar",
+        "lead_times_title": "Notification Lead Times (Days)",
+        "lead_times_description": "How many days before expiration should we notify you?",
+        "save_changes": "Save Changes"
+    },
+    "recipes": {
+        "title": "Recipes",
+        "suggestion": "Try making {{recipe}} with your {{item}}!",
+        "fallback": "How about a quick healthy meal with your items?",
+        "names": {
+            "Omelet": "Omelet",
+            "Vegetable Stir Fry": "Vegetable Stir Fry",
+            "Chicken Salad": "Chicken Salad",
+            "Pasta Marinara": "Pasta Marinara",
+            "Fruit Bowl": "Fruit Bowl"
+        },
+        "ingredients": "Ingredients",
+        "instructions": "Instructions",
+        "coming_soon": "Instructions for this recipe are coming soon!",
+        "ingredient_names": {
+            "egg": "Egg",
+            "cheese": "Cheese",
+            "milk": "Milk",
+            "butter": "Butter",
+            "broccoli": "Broccoli",
+            "carrot": "Carrot",
+            "onion": "Onion",
+            "tofu": "Tofu",
+            "soy sauce": "Soy Sauce",
+            "chicken": "Chicken",
+            "lettuce": "Lettuce",
+            "tomato": "Tomato",
+            "cucumber": "Cucumber",
+            "dressing": "Dressing",
+            "pasta": "Pasta",
+            "garlic": "Garlic",
+            "basil": "Basil",
+            "olive oil": "Olive Oil",
+            "apple": "Apple",
+            "banana": "Banana",
+            "berry": "Berry",
+            "yogurt": "Yogurt"
+        },
+        "tags": {
+            "protein": "Protein",
+            "vegetable": "Vegetable",
+            "carb": "Carb",
+            "fruit": "Fruit"
+        }
+    }
+}

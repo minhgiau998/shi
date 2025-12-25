@@ -40,7 +40,8 @@
             "textColor": "#000000"
           }
         }
-      ]
+      ],
+      "expo-localization"
     ],
     "extra": {
       "eas": {

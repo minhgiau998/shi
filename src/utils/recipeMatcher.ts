@@ -8,7 +8,16 @@ export interface Recipe {
     tag: string;
 }
 
-export function getRecipeSuggestion(expiringItems: InventoryItem[]): { message: string; recipe?: Recipe } | null {
+export interface RecipeSuggestion {
+    key: string;
+    params?: {
+        recipe?: string;
+        item?: string;
+    };
+    recipe?: Recipe;
+}
+
+export function getRecipeSuggestion(expiringItems: InventoryItem[]): RecipeSuggestion | null {
     const foodItems = expiringItems.filter(item => item.type === 'Food' && item.status === 'Expiring Soon');
 
     if (foodItems.length === 0) return null;
@@ -21,7 +30,11 @@ export function getRecipeSuggestion(expiringItems: InventoryItem[]): { message: 
 
         if (match) {
             return {
-                message: `Try making ${match.name} with your ${item.name}!`,
+                key: 'recipes.suggestion',
+                params: {
+                    recipe: match.name, // Key into recipes.names
+                    item: item.name
+                },
                 recipe: match,
             };
         }
@@ -29,6 +42,6 @@ export function getRecipeSuggestion(expiringItems: InventoryItem[]): { message: 
 
     // 2. Fallback
     return {
-        message: "How about a quick healthy meal with your items?",
+        key: 'recipes.fallback',
     };
 }

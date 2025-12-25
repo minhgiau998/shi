@@ -21,8 +21,10 @@ import { useUserStore } from '@store/userStore';
 import { ChevronLeft, Calendar, Package, Barcode, Edit } from 'lucide-react-native';
 import { computeItemStatus, getDaysUntilExpiration } from '@utils/expirationStatus';
 import { notificationService } from '@utils/notificationService';
+import { useTranslation } from 'react-i18next';
 
 export default function ItemDetailScreen() {
+    const { t } = useTranslation();
     const { id } = useLocalSearchParams();
     const router = useRouter();
     const { items, removeItem } = useInventoryStore();
@@ -42,9 +44,9 @@ export default function ItemDetailScreen() {
     if (!item) {
         return (
             <Box flex={1} justifyContent="center" alignItems="center">
-                <Text>Item not found</Text>
+                <Text>{t('item.not_found')}</Text>
                 <Button onPress={() => router.back()} mt="$4">
-                    <ButtonText>Go Back</ButtonText>
+                    <ButtonText>{t('item.go_back')}</ButtonText>
                 </Button>
             </Box>
         );
@@ -57,6 +59,8 @@ export default function ItemDetailScreen() {
         removeItem(item.id);
         router.back();
     };
+
+    const statusLabel = t(`item.status.${computedStatus.toLowerCase().replace(' ', '_')}`);
 
     return (
         <Box flex={1} bg="$backgroundLight0" $dark-bg="$backgroundDark950">
@@ -88,13 +92,13 @@ export default function ItemDetailScreen() {
                     <HStack justifyContent="space-between" alignItems="flex-start">
                         <VStack space="xs" flex={1}>
                             <Heading size="2xl" color="$textLight900" $dark-color="$textDark50">{item.name}</Heading>
-                            <Text color="$coolGray500" $dark-color="$coolGray400">{item.type}</Text>
+                            <Text color="$coolGray500" $dark-color="$coolGray400">{t(`categories.${item.type.toLowerCase()}`)}</Text>
                         </VStack>
                         <Badge
                             bg={computedStatus === 'Expired' ? '#D64545' : computedStatus === 'Expiring Soon' ? '#E8A87C' : '#6B9080'}
                             borderRadius="$full"
                         >
-                            <BadgeText color="white">{computedStatus}</BadgeText>
+                            <BadgeText color="white">{statusLabel}</BadgeText>
                         </Badge>
                     </HStack>
 
@@ -102,14 +106,14 @@ export default function ItemDetailScreen() {
                         <HStack space="md" alignItems="center">
                             <Icon as={Calendar} color={computedStatus === 'Expired' ? '#D64545' : computedStatus === 'Expiring Soon' ? '#E8A87C' : '#6B9080'} />
                             <VStack>
-                                <Text size="xs" color="$coolGray500" $dark-color="$coolGray400">Expiration Date</Text>
+                                <Text size="xs" color="$coolGray500" $dark-color="$coolGray400">{t('item.expiration_date')}</Text>
                                 <Text fontWeight="bold" color="$textLight900" $dark-color="$textDark50">{item.expirationDate}</Text>
                                 <Text size="xs" color={computedStatus === 'Expired' ? '#D64545' : computedStatus === 'Expiring Soon' ? '#E8A87C' : '$coolGray500'}>
                                     {daysUntilExpiration < 0
-                                        ? `Expired ${Math.abs(daysUntilExpiration)} day${Math.abs(daysUntilExpiration) !== 1 ? 's' : ''} ago`
+                                        ? t('item.expired_ago', { count: Math.abs(daysUntilExpiration), context: Math.abs(daysUntilExpiration) === 1 ? '' : 'plural' })
                                         : daysUntilExpiration === 0
-                                            ? 'Expires today!'
-                                            : `Expires in ${daysUntilExpiration} day${daysUntilExpiration !== 1 ? 's' : ''}`
+                                            ? t('item.expires_today')
+                                            : t('item.expires_in', { count: daysUntilExpiration, context: daysUntilExpiration === 1 ? '' : 'plural' })
                                     }
                                 </Text>
                             </VStack>
@@ -119,7 +123,7 @@ export default function ItemDetailScreen() {
                             <HStack space="md" alignItems="center">
                                 <Icon as={Barcode} color="#6B9080" />
                                 <VStack>
-                                    <Text size="xs" color="$coolGray500" $dark-color="$coolGray400">Barcode</Text>
+                                    <Text size="xs" color="$coolGray500" $dark-color="$coolGray400">{t('item.barcode')}</Text>
                                     <Text fontWeight="bold" color="$textLight900" $dark-color="$textDark50">{item.barcode}</Text>
                                 </VStack>
                             </HStack>
@@ -134,7 +138,7 @@ export default function ItemDetailScreen() {
                             borderColor="#6B9080"
                         >
                             <Icon as={Edit} mr="$2" color="#6B9080" />
-                            <ButtonText color="#6B9080">Edit Item</ButtonText>
+                            <ButtonText color="#6B9080">{t('item.edit_item')}</ButtonText>
                         </Button>
                         <Button
                             flex={1}
@@ -144,7 +148,7 @@ export default function ItemDetailScreen() {
                             borderColor="$red600"
                         >
                             <Icon as={TrashIcon} mr="$2" color="$red600" />
-                            <ButtonText color="$red600">Remove</ButtonText>
+                            <ButtonText color="$red600">{t('item.remove')}</ButtonText>
                         </Button>
                     </HStack>
                 </VStack>

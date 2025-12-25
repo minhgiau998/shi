@@ -23,6 +23,7 @@ import { getRecipeSuggestion } from '@utils/recipeMatcher';
 import { useWindowDimensions } from 'react-native';
 import { computeAllItemStatuses } from '@utils/expirationStatus';
 import { getAvatarIcon } from '@features/user/components/AvatarGrid';
+import { useTranslation } from 'react-i18next';
 
 import { CATEGORIES, CategoryType } from '../src/constants/categories';
 
@@ -32,19 +33,21 @@ const CATEGORY_ICONS: Record<CategoryType, any> = {
     Cosmetics: Sparkles,
 };
 
-const FILTER_OPTIONS = [
-    { label: 'All', value: 'All', icon: Home },
-    ...CATEGORIES.map((cat) => ({
-        label: cat.label,
-        value: cat.value,
-        icon: CATEGORY_ICONS[cat.value],
-    })),
-];
-
 export default function DashboardScreen() {
+    const { t } = useTranslation();
     const router = useRouter();
     const { profile } = useUserStore();
     const { items } = useInventoryStore();
+
+    const FILTER_OPTIONS = [
+        { label: t('common.all'), value: 'All', icon: Home },
+        ...CATEGORIES.map((cat) => ({
+            label: t(`categories.${cat.value.toLowerCase()}`),
+            value: cat.value,
+            icon: CATEGORY_ICONS[cat.value],
+        })),
+    ];
+
     const [activeFilter, setActiveFilter] = useState('All');
     const { width } = useWindowDimensions();
 
@@ -68,13 +71,15 @@ export default function DashboardScreen() {
                 {/* Header */}
                 <HStack justifyContent="space-between" alignItems="center" mt="$10" mb="$6">
                     <VStack>
-                        <Heading size="xl" color="$textLight900" $dark-color="$textDark50" style={{ width: width * 0.6 }}>Hello, {profile.userName}!</Heading>
+                        <Heading size="xl" color="$textLight900" $dark-color="$textDark50" style={{ width: width * 0.6 }}>
+                            {t('dashboard.hello', { name: profile.userName })}
+                        </Heading>
                         <Text size="sm" color={expiredCount > 0 ? '#D64545' : expiringSoonCount > 0 ? '#E8A87C' : '#6B9080'}>
                             {expiredCount > 0
-                                ? `⚠️ You have ${expiredCount} expired item${expiredCount > 1 ? 's' : ''}!`
+                                ? t('dashboard.expired_msg', { count: expiredCount })
                                 : expiringSoonCount > 0
-                                    ? `You have ${expiringSoonCount} item${expiringSoonCount > 1 ? 's' : ''} expiring soon.`
-                                    : "Everything is fresh!"}
+                                    ? t('dashboard.expiring_soon_msg', { count: expiringSoonCount })
+                                    : t('dashboard.all_fresh')}
                         </Text>
                     </VStack>
                     <Pressable onPress={() => router.push('/settings')}>
@@ -87,7 +92,13 @@ export default function DashboardScreen() {
                 {/* Recipe Suggestion */}
                 {suggestion && (
                     <Pressable
-                        onPress={() => {/* Open recipes page or details */ }}
+                        onPress={() => {
+                            if (suggestion.recipe) {
+                                router.navigate(`/recipe/${suggestion.recipe.id}` as any);
+                            } else {
+                                router.push('/recipes');
+                            }
+                        }}
                         mb="$8"
                         bg="#E8F4F0"
                         $dark-bg="$backgroundDark800"
@@ -95,12 +106,26 @@ export default function DashboardScreen() {
                         borderRadius="$xl"
                         borderWidth={1}
                         borderColor="#6B9080"
+                        w="$full"
+                        sx={{
+                            ":active": {
+                                opacity: 0.7
+                            }
+                        }}
                     >
                         <HStack space="md" alignItems="center">
                             <Icon as={Sparkles} color="#6B9080" />
                             <VStack flex={1}>
-                                <Heading size="sm" color="$textLight900" $dark-color="$textDark50">Recipe Tip</Heading>
-                                <Text size="sm" color="#6B9080">{suggestion.message}</Text>
+                                <Heading size="sm" color="$textLight900" $dark-color="$textDark50">{t('dashboard.recipe_tip')}</Heading>
+                                <Text size="sm" color="#6B9080">
+                                    {suggestion.params
+                                        ? t(suggestion.key, {
+                                            ...suggestion.params,
+                                            recipe: t(`recipes.names.${suggestion.params.recipe}`)
+                                        })
+                                        : t(suggestion.key)
+                                    }
+                                </Text>
                             </VStack>
                         </HStack>
                     </Pressable>
@@ -146,7 +171,7 @@ export default function DashboardScreen() {
                 <VStack space="md" pb="$10">
                     {filteredItems.length === 0 ? (
                         <Center mt="$20">
-                            <Text color="$coolGray400">No items found. Add some!</Text>
+                            <Text color="$coolGray400">{t('dashboard.no_items')}</Text>
                         </Center>
                     ) : (
                         filteredItems.map((item) => (
@@ -167,9 +192,9 @@ export default function DashboardScreen() {
                                 <HStack justifyContent="space-between" alignItems="center">
                                     <VStack>
                                         <Text fontWeight="bold" size="lg" color="$textLight900" $dark-color="$textDark50" style={{ width: width * 0.6 }}>{item.name}</Text>
-                                        <Text size="xs" color="$coolGray400">Expires: {item.expirationDate}</Text>
+                                        <Text size="xs" color="$coolGray400">{t('dashboard.expires', { date: item.expirationDate })}</Text>
                                     </VStack>
-                                    <Text size="xs" color="$coolGray500" italic>{item.type}</Text>
+                                    <Text size="xs" color="$coolGray500" italic>{t(`categories.${item.type.toLowerCase()}`)}</Text>
                                 </HStack>
                             </Pressable>
                         ))

@@ -6,6 +6,7 @@ export const users = sqliteTable('users', {
     avatarId: text('avatar_id').notNull(),
     isOnboarded: integer('is_onboarded', { mode: 'boolean' }).default(false),
     theme: text('theme', { enum: ['system', 'light', 'dark'] }).default('system').notNull(),
+    language: text('language').default('system').notNull(),
     createdAt: text('created_at').notNull(),
 });
 

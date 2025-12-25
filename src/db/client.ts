@@ -15,6 +15,7 @@ export const verifyTables = () => {
                 avatar_id TEXT NOT NULL,
                 is_onboarded INTEGER DEFAULT 0,
                 theme TEXT DEFAULT 'system' NOT NULL,
+                language TEXT DEFAULT 'system' NOT NULL,
                 created_at TEXT NOT NULL
             );
             
@@ -33,6 +34,12 @@ export const verifyTables = () => {
         // Migration for existing tables
         try {
             expoDb.execSync("ALTER TABLE users ADD COLUMN theme TEXT DEFAULT 'system' NOT NULL");
+        } catch (e) {
+            // Column likely exists
+        }
+
+        try {
+            expoDb.execSync("ALTER TABLE users ADD COLUMN language TEXT DEFAULT 'system' NOT NULL");
         } catch (e) {
             // Column likely exists
         }

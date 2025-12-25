@@ -28,6 +28,7 @@ export const useUserStore = create<UserState>((set, get) => ({
                     isOnboarded: user.isOnboarded || false,
                     createdAt: user.createdAt,
                     theme: (user.theme as 'system' | 'light' | 'dark') || 'system',
+                    language: user.language || 'system',
                     notificationSettings: {
                         foodLeadTime: 3,
                         medicineLeadTime: 7,
@@ -51,6 +52,7 @@ export const useUserStore = create<UserState>((set, get) => ({
                 avatarId: profile.avatarId,
                 isOnboarded: profile.isOnboarded,
                 theme: profile.theme,
+                language: profile.language,
                 createdAt: profile.createdAt
             });
             set({ profile });
@@ -71,6 +73,7 @@ export const useUserStore = create<UserState>((set, get) => ({
                     avatarId: updatedProfile.avatarId,
                     isOnboarded: updatedProfile.isOnboarded,
                     theme: updatedProfile.theme,
+                    language: updatedProfile.language,
                 })
                 .where(eq(users.id, currentProfile.id));
 

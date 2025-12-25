@@ -9,6 +9,8 @@ import { notificationService } from '@utils/notificationService';
 import * as Notifications from 'expo-notifications';
 import { verifyTables } from '@db/client';
 import { useColorScheme } from 'react-native';
+import '../src/i18n/i18n';
+import i18n, { getInitialLanguage } from '../src/i18n/i18n';
 
 export default function RootLayout() {
     const rootNavigationState = useRootNavigationState();
@@ -18,6 +20,12 @@ export default function RootLayout() {
 
     const { loadItems } = useInventoryStore();
     const { profile, loadUser, isLoading } = useUserStore();
+
+    useEffect(() => {
+        if (profile) {
+            i18n.changeLanguage(getInitialLanguage(profile.language));
+        }
+    }, [profile?.language]);
 
     const userTheme = profile?.theme || 'system';
     const activeTheme = userTheme === 'system'
@@ -67,6 +75,8 @@ export default function RootLayout() {
                     <Stack.Screen name="settings" options={{ presentation: 'modal' }} />
                     <Stack.Screen name="edit-profile" options={{ presentation: 'modal' }} />
                     <Stack.Screen name="item/[id]" />
+                    <Stack.Screen name="recipe/[id]" />
+                    <Stack.Screen name="recipes" />
                 </Stack>
             </GluestackUIProvider>
         </SafeAreaProvider>

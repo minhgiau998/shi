@@ -42,23 +42,25 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
 import { computeItemStatus } from '@utils/expirationStatus';
 import { notificationService } from '@utils/notificationService';
+import { useTranslation } from 'react-i18next';
 
 import { CATEGORIES, CATEGORY_VALUES } from '../src/constants/categories';
 
-const schema = z.object({
-    name: z.string().min(1, 'Name is required'),
-    type: z.enum(CATEGORY_VALUES),
-    expirationDate: z.string().min(1, 'Date is required'),
-    barcode: z.string().optional(),
-});
-
-type FormData = z.infer<typeof schema>;
-
 export default function AddItemScreen() {
+    const { t } = useTranslation();
     const router = useRouter();
     const addItem = useInventoryStore((state) => state.addItem);
     const { profile } = useUserStore();
     const [imageUri, setImageUri] = useState<string | null>(null);
+
+    const schema = z.object({
+        name: z.string().min(1, t('add_item.errors.name_required')),
+        type: z.enum(CATEGORY_VALUES),
+        expirationDate: z.string().min(1, t('add_item.errors.date_required')),
+        barcode: z.string().optional(),
+    });
+
+    type FormData = z.infer<typeof schema>;
 
     const { control, handleSubmit, setValue, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(schema),
@@ -79,7 +81,7 @@ export default function AddItemScreen() {
     const takePhoto = async () => {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
         if (status !== 'granted') {
-            alert('Sorry, we need camera permissions to make this work!');
+            alert(t('add_item.camera_permission_err'));
             return;
         }
 
@@ -97,7 +99,7 @@ export default function AddItemScreen() {
     const chooseFromLibrary = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
-            alert('Sorry, we need camera roll permissions to make this work!');
+            alert(t('add_item.library_permission_err'));
             return;
         }
 
@@ -115,19 +117,19 @@ export default function AddItemScreen() {
 
     const pickImage = () => {
         Alert.alert(
-            "Add Photo",
-            "Choose a source",
+            t('add_item.add_photo'),
+            t('add_item.choose_source'),
             [
                 {
-                    text: "Take Photo",
+                    text: t('add_item.take_photo'),
                     onPress: takePhoto
                 },
                 {
-                    text: "Choose from Library",
+                    text: t('add_item.choose_library'),
                     onPress: chooseFromLibrary
                 },
                 {
-                    text: "Cancel",
+                    text: t('common.cancel'),
                     style: "cancel"
                 }
             ]
@@ -143,7 +145,7 @@ export default function AddItemScreen() {
         if (!permission?.granted) {
             const result = await requestPermission();
             if (!result.granted) {
-                Alert.alert("Permission", "Camera permission is required to scan barcodes.");
+                Alert.alert(t('add_item.permission'), t('add_item.camera_permission_required'));
                 return;
             }
         }
@@ -201,9 +203,9 @@ export default function AddItemScreen() {
                 <ScrollView p="$6" keyboardShouldPersistTaps="handled">
                     <VStack space="xl" mt="$10" pb="$10">
                         <HStack justifyContent="space-between" alignItems="center">
-                            <Heading size="xl" color="$textLight900" $dark-color="$textDark50">Add Item</Heading>
+                            <Heading size="xl" color="$textLight900" $dark-color="$textDark50">{t('add_item.title')}</Heading>
                             <Pressable onPress={() => router.back()}>
-                                <Text color="#6B9080">Cancel</Text>
+                                <Text color="#6B9080">{t('common.cancel')}</Text>
                             </Pressable>
                         </HStack>
 
@@ -245,7 +247,7 @@ export default function AddItemScreen() {
                                     ) : (
                                         <VStack alignItems="center" space="sm">
                                             <Icon as={CameraIcon} size="xl" color="$coolGray400" />
-                                            <Text color="$coolGray400">Add Photo</Text>
+                                            <Text color="$coolGray400">{t('add_item.add_photo')}</Text>
                                         </VStack>
                                     )}
                                 </Box>
@@ -254,14 +256,14 @@ export default function AddItemScreen() {
 
                         <FormControl isInvalid={!!errors.name}>
                             <FormControlLabel>
-                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Item Name</FormControlLabelText>
+                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">{t('add_item.item_name')}</FormControlLabelText>
                             </FormControlLabel>
                             <Controller
                                 control={control}
                                 name="name"
                                 render={({ field: { onChange, value } }) => (
                                     <Input variant="outline">
-                                        <InputField placeholder="e.g. Greek Yogurt" value={value} onChangeText={onChange} color="$textLight900" $dark-color="$textDark50" />
+                                        <InputField placeholder={t('add_item.item_name_placeholder')} value={value} onChangeText={onChange} color="$textLight900" $dark-color="$textDark50" />
                                     </Input>
                                 )}
                             />
@@ -269,7 +271,7 @@ export default function AddItemScreen() {
 
                         <FormControl isInvalid={!!errors.type}>
                             <FormControlLabel>
-                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Category</FormControlLabelText>
+                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">{t('add_item.category')}</FormControlLabelText>
                             </FormControlLabel>
                             <Controller
                                 control={control}
@@ -277,7 +279,7 @@ export default function AddItemScreen() {
                                 render={({ field: { onChange, value } }) => (
                                     <Select onValueChange={onChange} selectedValue={value}>
                                         <SelectTrigger variant="outline" size="md">
-                                            <SelectInput placeholder="Select category" />
+                                            <SelectInput placeholder={t('add_item.select_category')} />
                                             <SelectIcon as={ChevronDownIcon} mr="$3" />
                                         </SelectTrigger>
                                         <SelectPortal>
@@ -289,7 +291,7 @@ export default function AddItemScreen() {
                                                 {CATEGORIES.map((cat) => (
                                                     <SelectItem
                                                         key={cat.value}
-                                                        label={cat.label}
+                                                        label={t(`categories.${cat.value.toLowerCase()}`)}
                                                         value={cat.value}
                                                         sx={{
                                                             _light: {
@@ -322,7 +324,7 @@ export default function AddItemScreen() {
 
                         <FormControl isInvalid={!!errors.expirationDate}>
                             <FormControlLabel>
-                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Expiration Date</FormControlLabelText>
+                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">{t('add_item.expiration_date')}</FormControlLabelText>
                             </FormControlLabel>
                             <Controller
                                 control={control}
@@ -332,7 +334,7 @@ export default function AddItemScreen() {
                                         <Pressable onPress={() => setShowDatePicker(true)}>
                                             <Input variant="outline" isReadOnly>
                                                 <InputField
-                                                    placeholder="Select Date"
+                                                    placeholder={t('add_item.select_date')}
                                                     value={value}
                                                     editable={false}
                                                     color="$textLight900"
@@ -368,7 +370,7 @@ export default function AddItemScreen() {
 
                         <FormControl>
                             <FormControlLabel>
-                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Barcode (Optional)</FormControlLabelText>
+                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">{t('add_item.barcode_optional')}</FormControlLabelText>
                             </FormControlLabel>
                             <Controller
                                 control={control}
@@ -376,7 +378,7 @@ export default function AddItemScreen() {
                                 render={({ field: { onChange, value } }) => (
                                     <HStack space="md">
                                         <Input variant="outline" flex={1}>
-                                            <InputField placeholder="Barcode number" value={value} onChangeText={onChange} color="$textLight900" $dark-color="$textDark50" />
+                                            <InputField placeholder={t('add_item.barcode_placeholder')} value={value} onChangeText={onChange} color="$textLight900" $dark-color="$textDark50" />
                                         </Input>
                                         <Button variant="outline" action="primary" onPress={startScan}>
                                             <Icon as={Scan} color="#6B9080" />
@@ -393,7 +395,7 @@ export default function AddItemScreen() {
                             mt="$2"
                             borderRadius="$xl"
                         >
-                            <ButtonText>Save Item</ButtonText>
+                            <ButtonText>{t('add_item.save_item')}</ButtonText>
                         </Button>
                     </VStack>
                 </ScrollView>
@@ -408,12 +410,12 @@ export default function AddItemScreen() {
                                 setScanned(true);
                                 setIsScanning(false);
                                 setValue('barcode', data);
-                                Alert.alert("Scanned", `Barcode: ${data}`);
+                                Alert.alert(t('add_item.scanned'), t('add_item.barcode_msg', { data }));
                             }}
                         />
                         <Box position="absolute" bottom={50} w="$full" alignItems="center">
                             <Button onPress={() => setIsScanning(false)} bg="$red500" size="lg">
-                                <ButtonText>Close Scanner</ButtonText>
+                                <ButtonText>{t('add_item.close_scanner')}</ButtonText>
                             </Button>
                         </Box>
                     </Box>

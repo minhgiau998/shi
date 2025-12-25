@@ -30,7 +30,7 @@ interface AvatarGridProps {
 
 export const AvatarGrid: React.FC<AvatarGridProps> = ({ selectedId, onSelect }) => {
     return (
-        <Box flexDirection="row" flexWrap="wrap" justifyContent="center" gap="$4">
+        <Box flexDirection="row" flexWrap="wrap" justifyContent="space-between" gap="$4" w="$full">
             {AVATARS.map((item) => {
                 const isSelected = selectedId === item.id;
                 return (
@@ -42,6 +42,7 @@ export const AvatarGrid: React.FC<AvatarGridProps> = ({ selectedId, onSelect }) 
                         bg={isSelected ? '#E8F4F0' : '$white'}
                         borderWidth={2}
                         borderColor={isSelected ? '#6B9080' : '$coolGray200'}
+                        $dark-bgColor={isSelected ? '$backgroundDark950' : '$backgroundDark900'}
                     >
                         <Icon
                             as={item.icon}

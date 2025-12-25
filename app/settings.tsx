@@ -15,13 +15,14 @@ import {
     Avatar
 } from '@gluestack-ui/themed';
 import { useUserStore } from '@store/userStore';
-import { Share2 } from 'lucide-react-native';
+import { Share2, Globe } from 'lucide-react-native';
 import { shareInventoryList } from '@utils/shareList';
 import { useInventoryStore } from '@store/inventoryStore';
 import { useRouter } from 'expo-router';
 import { ChevronLeft, LogOut, Download, Bell, Moon } from 'lucide-react-native';
 import { getAvatarIcon } from '@features/user/components/AvatarGrid';
 import { computeAllItemStatuses } from '@utils/expirationStatus';
+import { useTranslation } from 'react-i18next';
 
 import { CATEGORIES, CategoryType } from '../src/constants/categories';
 
@@ -33,6 +34,7 @@ const CATEGORY_TO_SETTING_KEY: Record<CategoryType, 'foodLeadTime' | 'medicineLe
 };
 
 export default function SettingsScreen() {
+    const { t } = useTranslation();
     const router = useRouter();
     const { profile, updateProfile, clearProfile } = useUserStore();
     const { items } = useInventoryStore();
@@ -42,6 +44,18 @@ export default function SettingsScreen() {
     // Compute current status for all items before export
     const itemsWithStatus = computeAllItemStatuses(items, profile.notificationSettings);
 
+    const languages = [
+        { label: t('settings.languages.system'), value: 'system' },
+        { label: t('settings.languages.en'), value: 'en' },
+        { label: t('settings.languages.vi'), value: 'vi' },
+    ];
+
+    const themes = [
+        { label: t('settings.themes.system'), value: 'system' },
+        { label: t('settings.themes.light'), value: 'light' },
+        { label: t('settings.themes.dark'), value: 'dark' },
+    ] as const;
+
     return (
         <Box flex={1} bg="$backgroundLight0" $dark-bg="$backgroundDark950">
             <ScrollView p="$6">
@@ -49,7 +63,7 @@ export default function SettingsScreen() {
                     <Pressable onPress={() => router.back()}>
                         <Icon as={ChevronLeft} size="xl" color="$textLight900" $dark-color="$textDark50" />
                     </Pressable>
-                    <Heading size="xl" color="$textLight900" $dark-color="$textDark50">Settings</Heading>
+                    <Heading size="xl" color="$textLight900" $dark-color="$textDark50">{t('settings.title')}</Heading>
                 </HStack>
 
                 {/* Profile Section */}
@@ -63,11 +77,11 @@ export default function SettingsScreen() {
                                 {profile.userName}
                             </Text>
                             <Text size="sm" color="$coolGray500" numberOfLines={1} ellipsizeMode="tail">
-                                Created at {new Date(profile.createdAt).toLocaleDateString()}
+                                {t('settings.created_at', { date: new Date(profile.createdAt).toLocaleDateString() })}
                             </Text>
                         </VStack>
                         <Button variant="link" onPress={() => router.push('/edit-profile')} flexShrink={0}>
-                            <ButtonText color="#6B9080">Edit</ButtonText>
+                            <ButtonText color="#6B9080">{t('common.edit')}</ButtonText>
                         </Button>
                     </HStack>
                 </VStack>
@@ -76,42 +90,73 @@ export default function SettingsScreen() {
                 <VStack space="md" mb="$10">
                     <HStack alignItems="center" space="sm">
                         <Icon as={Moon} size="sm" color="$coolGray600" $dark-color="$coolGray400" />
-                        <Heading size="md" color="$textLight900" $dark-color="$textDark50">App Appearance</Heading>
+                        <Heading size="md" color="$textLight900" $dark-color="$textDark50">{t('settings.appearance')}</Heading>
                     </HStack>
                     <Divider />
                     <HStack space="sm" mt="$2">
-                        {(['system', 'light', 'dark'] as const).map((mode) => (
+                        {themes.map((theme) => (
                             <Button
-                                key={mode}
+                                key={theme.value}
                                 flex={1}
-                                variant={profile.theme === mode ? 'solid' : 'outline'}
-                                action={profile.theme === mode ? 'primary' : 'secondary'}
-                                bg={profile.theme === mode ? '#6B9080' : 'transparent'}
-                                borderColor={profile.theme === mode ? '#6B9080' : '$coolGray300'}
-                                onPress={() => updateProfile({ theme: mode })}
+                                variant={profile.theme === theme.value ? 'solid' : 'outline'}
+                                action={profile.theme === theme.value ? 'primary' : 'secondary'}
+                                bg={profile.theme === theme.value ? '#6B9080' : 'transparent'}
+                                borderColor={profile.theme === theme.value ? '#6B9080' : '$coolGray300'}
+                                onPress={() => updateProfile({ theme: theme.value })}
                             >
                                 <ButtonText
-                                    color={profile.theme === mode ? '$white' : '$coolGray600'}
-                                    $dark-color={profile.theme === mode ? '$white' : '$coolGray400'}
+                                    color={profile.theme === theme.value ? '$white' : '$coolGray600'}
+                                    $dark-color={profile.theme === theme.value ? '$white' : '$coolGray400'}
                                     textTransform="capitalize"
                                 >
-                                    {mode}
+                                    {theme.label}
                                 </ButtonText>
                             </Button>
                         ))}
                     </HStack>
                 </VStack>
 
+                {/* Language Section */}
+                <VStack space="md" mb="$10">
+                    <HStack alignItems="center" space="sm">
+                        <Icon as={Globe} size="sm" color="$coolGray600" $dark-color="$coolGray400" />
+                        <Heading size="md" color="$textLight900" $dark-color="$textDark50">{t('settings.language')}</Heading>
+                    </HStack>
+                    <Divider />
+                    <VStack space="sm" mt="$2">
+                        {languages.map((lang) => (
+                            <Button
+                                key={lang.value}
+                                variant={profile.language === lang.value ? 'solid' : 'outline'}
+                                action={profile.language === lang.value ? 'primary' : 'secondary'}
+                                bg={profile.language === lang.value ? '#6B9080' : 'transparent'}
+                                borderColor={profile.language === lang.value ? '#6B9080' : '$coolGray300'}
+                                onPress={() => updateProfile({ language: lang.value })}
+                                justifyContent="flex-start"
+                            >
+                                <ButtonText
+                                    color={profile.language === lang.value ? '$white' : '$coolGray600'}
+                                    $dark-color={profile.language === lang.value ? '$white' : '$coolGray400'}
+                                >
+                                    {lang.label}
+                                </ButtonText>
+                            </Button>
+                        ))}
+                    </VStack>
+                </VStack>
+
                 {/* Notifications Section */}
                 <VStack space="md" mb="$10">
                     <HStack alignItems="center" space="sm">
                         <Icon as={Bell} size="sm" color="$coolGray600" $dark-color="$coolGray400" />
-                        <Heading size="md" color="$textLight900" $dark-color="$textDark50">Notifications</Heading>
+                        <Heading size="md" color="$textLight900" $dark-color="$textDark50">{t('settings.notifications')}</Heading>
                     </HStack>
                     <Divider />
                     {CATEGORIES.map((cat) => (
                         <HStack key={cat.value} justifyContent="space-between" alignItems="center">
-                            <Text color="$textLight900" $dark-color="$textDark50">{cat.label} Lead Time (Days)</Text>
+                            <Text color="$textLight900" $dark-color="$textDark50">
+                                {t('settings.lead_time', { category: t(`categories.${cat.value.toLowerCase()}`) })}
+                            </Text>
                             <Text fontWeight="bold" color="$textLight900" $dark-color="$textDark50">
                                 {profile.notificationSettings[CATEGORY_TO_SETTING_KEY[cat.value]]}
                             </Text>
@@ -123,12 +168,12 @@ export default function SettingsScreen() {
                 <VStack space="md" mb="$10">
                     <HStack alignItems="center" space="sm">
                         <Icon as={Share2} size="sm" color="$coolGray600" $dark-color="$coolGray400" />
-                        <Heading size="md" color="$textLight900" $dark-color="$textDark50">Share Data</Heading>
+                        <Heading size="md" color="$textLight900" $dark-color="$textDark50">{t('settings.share_data')}</Heading>
                     </HStack>
                     <Divider />
 
                     <Text size="sm" color="$coolGray500" $dark-color="$coolGray400">
-                        Send your current inventory list via message or save to notes.
+                        {t('settings.share_description')}
                     </Text>
 
                     <Button
@@ -137,7 +182,7 @@ export default function SettingsScreen() {
                         borderColor="#6B9080"
                         onPress={() => shareInventoryList(items)}
                     >
-                        <ButtonText color="#6B9080">Share Inventory List</ButtonText>
+                        <ButtonText color="#6B9080">{t('settings.share_button')}</ButtonText>
                     </Button>
                 </VStack>
 
@@ -145,12 +190,12 @@ export default function SettingsScreen() {
                 <VStack space="md" mb="$10">
                     <HStack alignItems="center" space="sm">
                         <Icon as={LogOut} size="sm" color="$coolGray600" $dark-color="$coolGray400" />
-                        <Heading size="md" color="$textLight900" $dark-color="$textDark50">Reset App Data</Heading>
+                        <Heading size="md" color="$textLight900" $dark-color="$textDark50">{t('settings.reset_data')}</Heading>
                     </HStack>
                     <Divider />
 
                     <Text size="sm" color="$coolGray500" $dark-color="$coolGray400">
-                        This will clear all data stored in the app and reset everything to the beginning.
+                        {t('settings.reset_description')}
                     </Text>
 
                     <Button
@@ -158,15 +203,15 @@ export default function SettingsScreen() {
                         action="negative"
                         onPress={() => {
                             Alert.alert(
-                                "Reset App Data",
-                                "Are you sure you want to delete all your data? This action cannot be undone.",
+                                t('settings.reset_data'),
+                                t('settings.reset_description'),
                                 [
                                     {
-                                        text: "Cancel",
+                                        text: t('common.cancel'),
                                         style: "cancel"
                                     },
                                     {
-                                        text: "Delete",
+                                        text: t('common.delete'),
                                         style: "destructive",
                                         onPress: async () => {
                                             await useInventoryStore.getState().resetStore();
@@ -178,10 +223,11 @@ export default function SettingsScreen() {
                             );
                         }}
                     >
-                        <ButtonText color="$red600">Reset</ButtonText>
+                        <ButtonText color="$red600">{t('common.reset')}</ButtonText>
                     </Button>
                 </VStack>
             </ScrollView>
         </Box>
     );
 }
+
