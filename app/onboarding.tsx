@@ -58,6 +58,7 @@ export default function OnboardingScreen() {
                 cosmeticsLeadTime: 7,
             },
             createdAt: new Date().toISOString(),
+            theme: 'system' as 'system' | 'light' | 'dark',
         };
 
         await setProfile(newProfile);
@@ -70,11 +71,11 @@ export default function OnboardingScreen() {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={{ flex: 1 }}
         >
-            <Box flex={1} bg="$white">
+            <Box flex={1} bg="$backgroundLight0" $dark-bg="$backgroundDark950">
                 <ScrollView p="$6" keyboardShouldPersistTaps="handled">
                     <VStack space="xl" mt="$16">
                         <Center>
-                            <Heading size="2xl" textAlign="center">Welcome to SHI!</Heading>
+                            <Heading size="2xl" textAlign="center" color="$textLight900" $dark-color="$textDark50">Welcome to SHI!</Heading>
                             <Text size="md" color="$coolGray500" textAlign="center" mt="$2">
                                 Let's get to know you.
                             </Text>
@@ -82,7 +83,7 @@ export default function OnboardingScreen() {
 
                         <FormControl isInvalid={!!errors.name}>
                             <FormControlLabel>
-                                <FormControlLabelText>What should we call you?</FormControlLabelText>
+                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">What should we call you?</FormControlLabelText>
                             </FormControlLabel>
                             <Controller
                                 control={control}
@@ -94,6 +95,8 @@ export default function OnboardingScreen() {
                                             onBlur={onBlur}
                                             onChangeText={onChange}
                                             value={value}
+                                            color="$textLight900"
+                                            $dark-color="$textDark50"
                                         />
                                     </Input>
                                 )}
@@ -106,7 +109,7 @@ export default function OnboardingScreen() {
 
                         <FormControl isInvalid={!!errors.avatarId}>
                             <FormControlLabel>
-                                <FormControlLabelText>Choose your avatar</FormControlLabelText>
+                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Choose your avatar</FormControlLabelText>
                             </FormControlLabel>
                             <Controller
                                 control={control}

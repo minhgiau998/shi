@@ -8,14 +8,21 @@ import { useEffect } from 'react';
 import { notificationService } from '@utils/notificationService';
 import * as Notifications from 'expo-notifications';
 import { verifyTables } from '@db/client';
+import { useColorScheme } from 'react-native';
 
 export default function RootLayout() {
     const rootNavigationState = useRootNavigationState();
     const router = useRouter();
     const segments = useSegments();
+    const systemColorScheme = useColorScheme();
 
     const { loadItems } = useInventoryStore();
     const { profile, loadUser, isLoading } = useUserStore();
+
+    const userTheme = profile?.theme || 'system';
+    const activeTheme = userTheme === 'system'
+        ? (systemColorScheme || 'light')
+        : userTheme;
 
     // Request permissions, setup listeners, and initialize DB
     useEffect(() => {
@@ -47,7 +54,7 @@ export default function RootLayout() {
 
     return (
         <SafeAreaProvider>
-            <GluestackUIProvider config={config}>
+            <GluestackUIProvider config={config} colorMode={activeTheme}>
                 <Stack
                     screenOptions={{
                         headerShown: false,

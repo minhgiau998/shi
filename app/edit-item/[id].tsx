@@ -40,10 +40,11 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { format, parseISO } from 'date-fns';
 import { useUserStore } from '@store/userStore';
 import { notificationService } from '@utils/notificationService';
+import { CATEGORIES, CATEGORY_VALUES } from '../../src/constants/categories';
 
 const schema = z.object({
     name: z.string().min(1, 'Name is required'),
-    type: z.enum(['Food', 'Medicine', 'Cosmetics']),
+    type: z.enum(CATEGORY_VALUES),
     expirationDate: z.string().min(1, 'Date is required'),
     barcode: z.string().optional(),
 });
@@ -211,11 +212,11 @@ export default function EditItemScreen() {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={{ flex: 1 }}
         >
-            <Box flex={1} bg="$white">
+            <Box flex={1} bg="$backgroundLight0" $dark-bg="$backgroundDark950">
                 <ScrollView p="$6" keyboardShouldPersistTaps="handled">
                     <VStack space="xl" mt="$10" pb="$10">
                         <HStack justifyContent="space-between" alignItems="center">
-                            <Heading size="xl">Edit Item</Heading>
+                            <Heading size="xl" color="$textLight900" $dark-color="$textDark50">Edit Item</Heading>
                             <Pressable onPress={() => router.back()}>
                                 <Text color="#6B9080">Cancel</Text>
                             </Pressable>
@@ -229,37 +230,53 @@ export default function EditItemScreen() {
                                 style={{
                                     width: '100%',
                                     height: 200,
-                                    backgroundColor: '#F3F4F6',
                                     borderRadius: 12,
                                     borderStyle: 'dashed',
                                     borderWidth: 2,
-                                    borderColor: '#D1D5DB',
                                     justifyContent: 'center',
                                     alignItems: 'center',
-                                    overflow: 'hidden'
+                                    overflow: 'hidden',
                                 }}
                             >
-                                {imageUri ? (
-                                    <Image source={{ uri: imageUri }} w="$full" h="$full" alt="Item preview" />
-                                ) : (
-                                    <VStack alignItems="center" space="sm">
-                                        <Icon as={CameraIcon} size="xl" color="$coolGray400" />
-                                        <Text color="$coolGray400">Change Photo</Text>
-                                    </VStack>
-                                )}
+                                <Box
+                                    w="$full"
+                                    h="$full"
+                                    borderWidth={2}
+                                    borderStyle="dashed"
+                                    borderRadius={12}
+                                    justifyContent="center"
+                                    alignItems="center"
+                                    sx={{
+                                        bg: "$coolGray100",
+                                        borderColor: "$coolGray300",
+                                        _dark: {
+                                            bg: "$backgroundDark800",
+                                            borderColor: "$coolGray700",
+                                        },
+                                    }}
+                                >
+                                    {imageUri ? (
+                                        <Image source={{ uri: imageUri }} w="$full" h="$full" alt="Item preview" />
+                                    ) : (
+                                        <VStack alignItems="center" space="sm">
+                                            <Icon as={CameraIcon} size="xl" color="$coolGray400" />
+                                            <Text color="$coolGray400">Change Photo</Text>
+                                        </VStack>
+                                    )}
+                                </Box>
                             </TouchableOpacity>
                         </Box>
 
                         <FormControl isInvalid={!!errors.name}>
                             <FormControlLabel>
-                                <FormControlLabelText>Item Name</FormControlLabelText>
+                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Item Name</FormControlLabelText>
                             </FormControlLabel>
                             <Controller
                                 control={control}
                                 name="name"
                                 render={({ field: { onChange, value } }) => (
                                     <Input variant="outline">
-                                        <InputField placeholder="e.g. Greek Yogurt" value={value} onChangeText={onChange} />
+                                        <InputField placeholder="e.g. Greek Yogurt" value={value} onChangeText={onChange} color="$textLight900" $dark-color="$textDark50" />
                                     </Input>
                                 )}
                             />
@@ -267,7 +284,7 @@ export default function EditItemScreen() {
 
                         <FormControl isInvalid={!!errors.type}>
                             <FormControlLabel>
-                                <FormControlLabelText>Category</FormControlLabelText>
+                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Category</FormControlLabelText>
                             </FormControlLabel>
                             <Controller
                                 control={control}
@@ -275,7 +292,7 @@ export default function EditItemScreen() {
                                 render={({ field: { onChange, value } }) => (
                                     <Select onValueChange={onChange} selectedValue={value}>
                                         <SelectTrigger variant="outline" size="md">
-                                            <SelectInput placeholder="Select category" />
+                                            <SelectInput placeholder="Select category" color="$textLight900" $dark-color="$textDark50" />
                                             <SelectIcon as={ChevronDownIcon} mr="$3" />
                                         </SelectTrigger>
                                         <SelectPortal>
@@ -284,9 +301,33 @@ export default function EditItemScreen() {
                                                 <SelectDragIndicatorWrapper>
                                                     <SelectDragIndicator />
                                                 </SelectDragIndicatorWrapper>
-                                                <SelectItem label="Food" value="Food" />
-                                                <SelectItem label="Medicine" value="Medicine" />
-                                                <SelectItem label="Cosmetics" value="Cosmetics" />
+                                                {CATEGORIES.map((cat) => (
+                                                    <SelectItem
+                                                        key={cat.value}
+                                                        label={cat.label}
+                                                        value={cat.value}
+                                                        sx={{
+                                                            _light: {
+                                                                bg: "$backgroundLight50",
+                                                                ":hover": {
+                                                                    bg: "$backgroundLight100",
+                                                                },
+                                                                ":active": {
+                                                                    bg: "$backgroundLight200",
+                                                                },
+                                                            },
+                                                            _dark: {
+                                                                bg: "$backgroundDark900",
+                                                                ":hover": {
+                                                                    bg: "$backgroundDark800",
+                                                                },
+                                                                ":active": {
+                                                                    bg: "$backgroundDark700",
+                                                                },
+                                                            },
+                                                        }}
+                                                    />
+                                                ))}
                                             </SelectContent>
                                         </SelectPortal>
                                     </Select>
@@ -296,7 +337,7 @@ export default function EditItemScreen() {
 
                         <FormControl isInvalid={!!errors.expirationDate}>
                             <FormControlLabel>
-                                <FormControlLabelText>Expiration Date</FormControlLabelText>
+                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Expiration Date</FormControlLabelText>
                             </FormControlLabel>
                             <Controller
                                 control={control}
@@ -309,6 +350,8 @@ export default function EditItemScreen() {
                                                     placeholder="Select Date"
                                                     value={value}
                                                     editable={false}
+                                                    color="$textLight900"
+                                                    $dark-color="$textDark50"
                                                 />
                                             </Input>
                                         </Pressable>
@@ -345,7 +388,7 @@ export default function EditItemScreen() {
 
                         <FormControl>
                             <FormControlLabel>
-                                <FormControlLabelText>Barcode (Optional)</FormControlLabelText>
+                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Barcode (Optional)</FormControlLabelText>
                             </FormControlLabel>
                             <Controller
                                 control={control}
@@ -353,7 +396,7 @@ export default function EditItemScreen() {
                                 render={({ field: { onChange, value } }) => (
                                     <HStack space="md">
                                         <Input variant="outline" flex={1}>
-                                            <InputField placeholder="Barcode number" value={value} onChangeText={onChange} />
+                                            <InputField placeholder="Barcode number" value={value} onChangeText={onChange} color="$textLight900" $dark-color="$textDark50" />
                                         </Input>
                                         <Button variant="outline" action="primary" onPress={() => {/* Scan logic */ }}>
                                             <Icon as={Scan} color="#6B9080" />

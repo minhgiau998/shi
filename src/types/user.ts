@@ -10,5 +10,6 @@ export interface UserProfile {
     avatarId: string;
     isOnboarded: boolean;
     notificationSettings: NotificationSettings;
+    theme: 'system' | 'light' | 'dark';
     createdAt: string;
 }

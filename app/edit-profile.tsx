@@ -109,19 +109,19 @@ export default function EditProfileScreen() {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={{ flex: 1 }}
         >
-            <Box flex={1} bg="$white">
+            <Box flex={1} bg="$backgroundLight0" $dark-bg="$backgroundDark950">
                 <ScrollView p="$6" keyboardShouldPersistTaps="handled">
                     <HStack space="md" alignItems="center" mt="$10" mb="$6">
                         <Pressable onPress={() => router.back()}>
-                            <Icon as={ChevronLeft} size="xl" />
+                            <Icon as={ChevronLeft} size="xl" color="$textLight900" $dark-color="$textDark50" />
                         </Pressable>
-                        <Heading size="xl">Edit Profile</Heading>
+                        <Heading size="xl" color="$textLight900" $dark-color="$textDark50">Edit Profile</Heading>
                     </HStack>
 
                     <VStack space="xl">
                         <FormControl isInvalid={!!errors.userName}>
                             <FormControlLabel>
-                                <FormControlLabelText>Display Name</FormControlLabelText>
+                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Display Name</FormControlLabelText>
                             </FormControlLabel>
                             <Controller
                                 control={control}
@@ -133,6 +133,8 @@ export default function EditProfileScreen() {
                                             onBlur={onBlur}
                                             onChangeText={onChange}
                                             value={value}
+                                            color="$textLight900"
+                                            $dark-color="$textDark50"
                                         />
                                     </Input>
                                 )}
@@ -145,7 +147,7 @@ export default function EditProfileScreen() {
 
                         <FormControl isInvalid={!!errors.avatarId}>
                             <FormControlLabel>
-                                <FormControlLabelText>Change Avatar</FormControlLabelText>
+                                <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Change Avatar</FormControlLabelText>
                             </FormControlLabel>
                             <Controller
                                 control={control}
@@ -161,7 +163,7 @@ export default function EditProfileScreen() {
                         </FormControl>
 
                         <Divider my="$4" />
-                        <Heading size="md" mb="$2">Notification Lead Times (Days)</Heading>
+                        <Heading size="md" mb="$2" color="$textLight900" $dark-color="$textDark50">Notification Lead Times (Days)</Heading>
                         <Text size="xs" color="$coolGray500" mb="$4">
                             How many days before expiration should we notify you?
                         </Text>
@@ -169,7 +171,7 @@ export default function EditProfileScreen() {
                         <HStack space="md" justifyContent="space-between">
                             <FormControl flex={1} isInvalid={!!errors.foodLeadTime}>
                                 <FormControlLabel>
-                                    <FormControlLabelText>Food</FormControlLabelText>
+                                    <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Food</FormControlLabelText>
                                 </FormControlLabel>
                                 <Controller
                                     control={control}
@@ -180,6 +182,8 @@ export default function EditProfileScreen() {
                                                 keyboardType="numeric"
                                                 value={value.toString()}
                                                 onChangeText={(text) => onChange(parseInt(text) || 0)}
+                                                color="$textLight900"
+                                                $dark-color="$textDark50"
                                             />
                                         </Input>
                                     )}
@@ -188,7 +192,7 @@ export default function EditProfileScreen() {
 
                             <FormControl flex={1} isInvalid={!!errors.medicineLeadTime}>
                                 <FormControlLabel>
-                                    <FormControlLabelText>Medicine</FormControlLabelText>
+                                    <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Medicine</FormControlLabelText>
                                 </FormControlLabel>
                                 <Controller
                                     control={control}
@@ -199,6 +203,8 @@ export default function EditProfileScreen() {
                                                 keyboardType="numeric"
                                                 value={value.toString()}
                                                 onChangeText={(text) => onChange(parseInt(text) || 0)}
+                                                color="$textLight900"
+                                                $dark-color="$textDark50"
                                             />
                                         </Input>
                                     )}
@@ -207,7 +213,7 @@ export default function EditProfileScreen() {
 
                             <FormControl flex={1} isInvalid={!!errors.cosmeticsLeadTime}>
                                 <FormControlLabel>
-                                    <FormControlLabelText>Cosmetics</FormControlLabelText>
+                                    <FormControlLabelText color="$textLight900" $dark-color="$textDark50">Cosmetics</FormControlLabelText>
                                 </FormControlLabel>
                                 <Controller
                                     control={control}
@@ -218,6 +224,8 @@ export default function EditProfileScreen() {
                                                 keyboardType="numeric"
                                                 value={value.toString()}
                                                 onChangeText={(text) => onChange(parseInt(text) || 0)}
+                                                color="$textLight900"
+                                                $dark-color="$textDark50"
                                             />
                                         </Input>
                                     )}

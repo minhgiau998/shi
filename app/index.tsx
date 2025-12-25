@@ -24,11 +24,21 @@ import { useWindowDimensions } from 'react-native';
 import { computeAllItemStatuses } from '@utils/expirationStatus';
 import { getAvatarIcon } from '@features/user/components/AvatarGrid';
 
+import { CATEGORIES, CategoryType } from '../src/constants/categories';
+
+const CATEGORY_ICONS: Record<CategoryType, any> = {
+    Food: Sparkles,
+    Medicine: Pill,
+    Cosmetics: Sparkles,
+};
+
 const FILTER_OPTIONS = [
     { label: 'All', value: 'All', icon: Home },
-    { label: 'Food', value: 'Food', icon: Sparkles },
-    { label: 'Medicine', value: 'Medicine', icon: Pill },
-    { label: 'Cosmetics', value: 'Cosmetics', icon: Sparkles },
+    ...CATEGORIES.map((cat) => ({
+        label: cat.label,
+        value: cat.value,
+        icon: CATEGORY_ICONS[cat.value],
+    })),
 ];
 
 export default function DashboardScreen() {
@@ -53,12 +63,12 @@ export default function DashboardScreen() {
     const suggestion = getRecipeSuggestion(expiringSoonItems);
 
     return (
-        <Box flex={1} bg="#F5F5F5">
+        <Box flex={1} bg="$backgroundLight0" $dark-bg="$backgroundDark950">
             <ScrollView contentContainerStyle={{ padding: 24 }}>
                 {/* Header */}
                 <HStack justifyContent="space-between" alignItems="center" mt="$10" mb="$6">
                     <VStack>
-                        <Heading size="xl" color="#2C3E3F" style={{ width: width * 0.6 }}>Hello, {profile.userName}!</Heading>
+                        <Heading size="xl" color="$textLight900" $dark-color="$textDark50" style={{ width: width * 0.6 }}>Hello, {profile.userName}!</Heading>
                         <Text size="sm" color={expiredCount > 0 ? '#D64545' : expiringSoonCount > 0 ? '#E8A87C' : '#6B9080'}>
                             {expiredCount > 0
                                 ? `⚠️ You have ${expiredCount} expired item${expiredCount > 1 ? 's' : ''}!`
@@ -80,6 +90,7 @@ export default function DashboardScreen() {
                         onPress={() => {/* Open recipes page or details */ }}
                         mb="$8"
                         bg="#E8F4F0"
+                        $dark-bg="$backgroundDark800"
                         p="$4"
                         borderRadius="$xl"
                         borderWidth={1}
@@ -88,7 +99,7 @@ export default function DashboardScreen() {
                         <HStack space="md" alignItems="center">
                             <Icon as={Sparkles} color="#6B9080" />
                             <VStack flex={1}>
-                                <Heading size="sm" color="#2C3E3F">Recipe Tip</Heading>
+                                <Heading size="sm" color="$textLight900" $dark-color="$textDark50">Recipe Tip</Heading>
                                 <Text size="sm" color="#6B9080">{suggestion.message}</Text>
                             </VStack>
                         </HStack>
@@ -113,10 +124,16 @@ export default function DashboardScreen() {
                                     py="$2"
                                     borderRadius="$full"
                                     bg={isActive ? '#6B9080' : '$white'}
+                                    $dark-bg={isActive ? '#6B9080' : '$backgroundDark800'}
                                     borderWidth={1}
                                     borderColor={isActive ? '#6B9080' : '$coolGray200'}
+                                    $dark-borderColor={isActive ? '#6B9080' : '$coolGray700'}
                                 >
-                                    <Text color={isActive ? '$white' : '$coolGray600'} fontWeight={isActive ? 'bold' : 'normal'}>
+                                    <Text
+                                        color={isActive ? '$white' : '$coolGray600'}
+                                        $dark-color={isActive ? '$white' : '$coolGray300'}
+                                        fontWeight={isActive ? 'bold' : 'normal'}
+                                    >
                                         {option.label}
                                     </Text>
                                 </Pressable>
@@ -137,6 +154,7 @@ export default function DashboardScreen() {
                                 key={item.id}
                                 onPress={() => router.push(`/item/${item.id}`)}
                                 bg="$white"
+                                $dark-bg="$backgroundDark900"
                                 p="$4"
                                 borderRadius="$xl"
                                 borderLeftWidth={5}
@@ -148,7 +166,7 @@ export default function DashboardScreen() {
                             >
                                 <HStack justifyContent="space-between" alignItems="center">
                                     <VStack>
-                                        <Text fontWeight="bold" size="lg" color="#2C3E3F" style={{ width: width * 0.6 }}>{item.name}</Text>
+                                        <Text fontWeight="bold" size="lg" color="$textLight900" $dark-color="$textDark50" style={{ width: width * 0.6 }}>{item.name}</Text>
                                         <Text size="xs" color="$coolGray400">Expires: {item.expirationDate}</Text>
                                     </VStack>
                                     <Text size="xs" color="$coolGray500" italic>{item.type}</Text>

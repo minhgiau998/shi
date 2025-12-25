@@ -14,6 +14,7 @@ export const verifyTables = () => {
                 name TEXT NOT NULL,
                 avatar_id TEXT NOT NULL,
                 is_onboarded INTEGER DEFAULT 0,
+                theme TEXT DEFAULT 'system' NOT NULL,
                 created_at TEXT NOT NULL
             );
             
@@ -28,6 +29,14 @@ export const verifyTables = () => {
                 created_at TEXT NOT NULL
             );
         `);
+
+        // Migration for existing tables
+        try {
+            expoDb.execSync("ALTER TABLE users ADD COLUMN theme TEXT DEFAULT 'system' NOT NULL");
+        } catch (e) {
+            // Column likely exists
+        }
+
         console.log("Tables verified/created");
     } catch (e) {
         console.error("Error creating tables:", e);
