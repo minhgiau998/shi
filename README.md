@@ -106,6 +106,35 @@ Use Expo Updates to push fixes instantly without re-submitting to the stores:
 eas update --branch production --message "Fixed translation bug"
 ```
 
+### 6. Extracting APK from AAB (using Bundletool)
+If you need a universal APK for local testing from your production `.aab` file:
+
+#### **Step A: Download Keystore from EAS**
+1. Run `eas credentials`.
+2. Select **Android** > **production**.
+3. Select **Keystore: Manage everything needed to build your project**.
+4. Choose **Download keystore** and save it (e.g., `my-keystore.jks`).
+5. Take note of the **Key Alias**, **Keystore Password**, and **Key Password**.
+
+#### **Step B: Generate Universal APK**
+Download `bundletool.jar` from [GitHub](https://github.com/google/bundletool/releases) and run:
+
+```bash
+java -jar bundletool.jar build-apks \
+--bundle=your-app.aab \
+--output=app.apks \
+--mode=universal \
+--ks=my-keystore.jks \
+--ks-pass=pass:your_keystore_password \
+--ks-key-alias=your_key_alias \
+--key-pass=pass:your_key_password
+```
+
+#### **Step C: Extract the APK**
+1. Rename `app.apks` to `app.zip`.
+2. Extract the zip file.
+3. You will find `universal.apk` inside.
+
 ## 🏗️ Project Structure
 
 ```
