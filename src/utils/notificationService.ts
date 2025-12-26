@@ -3,6 +3,7 @@ import { Platform } from 'react-native';
 import { InventoryItem, ItemType } from '@appTypes/inventory';
 import { NotificationSettings } from '@appTypes/user';
 import { subDays, parseISO, startOfDay, isBefore, differenceInSeconds } from 'date-fns';
+import i18n from '../i18n/i18n';
 
 // Configure how notifications should be handled when the app is foregrounded
 Notifications.setNotificationHandler({
@@ -97,8 +98,11 @@ export const notificationService = {
 
             const identifier = await Notifications.scheduleNotificationAsync({
                 content: {
-                    title: "SHI Alert: Use it or lose it!",
-                    body: `${item.name} is expiring in ${this.getLeadTime(item.type, settings)} days.`,
+                    title: i18n.t('push_notifications.expiry_title'),
+                    body: i18n.t('push_notifications.expiry_body', {
+                        name: item.name,
+                        days: this.getLeadTime(item.type, settings)
+                    }),
                     data: { itemId: item.id },
                     sound: true,
                 },

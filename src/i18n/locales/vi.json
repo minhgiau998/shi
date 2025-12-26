@@ -161,5 +161,9 @@
             "carb": "Tinh bột",
             "fruit": "Trái cây"
         }
+    },
+    "push_notifications": {
+        "expiry_title": "Cảnh báo SHI: Sắp hết hạn!",
+        "expiry_body": "{{name}} sẽ hết hạn trong {{days}} ngày. Hãy sử dụng ngay nhé!"
     }
 }

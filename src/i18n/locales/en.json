@@ -161,5 +161,9 @@
             "carb": "Carb",
             "fruit": "Fruit"
         }
+    },
+    "push_notifications": {
+        "expiry_title": "SHI Alert: Use it or lose it!",
+        "expiry_body": "{{name}} is expiring in {{days}} days."
     }
 }
